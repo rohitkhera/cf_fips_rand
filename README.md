@@ -8,10 +8,19 @@ The intent is to address the goal of using
 correctly seeded NIST SP 800-90A specified PRNGs for generation of IVs, 
 symmetric keys, nonces, salts and machine passwords. The SP 800-90A PRNGs
 cannot directly generate asymmetric keys. Seeding of generators is 
-done explicitly, and the entropy of the seed measured in bits is by default 
-256 based on Linux Entropy pool's estimation 'heuristic' (refer to 
+done explicitly, by extracting 256 bits of noise from the Linux entropy 
+pools. Entropy of the seed (measured in bits) is therefore
+256 based on Linux entropy pool's estimation 'heuristic' (refer to 
 https://ringcipher.com/2013/05/04/uncertainty-randomness-virtualization/ 
-for an explanation of this heuristic). 
+for an explanation of this). Given this fact, the libraries 
+instantiate the NIST generators 
+with sufficient strength for generation of 256 bit symmetric keys 
+(Look at sections 8.2 and 8.4 of the following for an explanation of 
+of some of this) - 
+http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-90Ar1.pdf
+
+These libraries currently do not expose any methods to reseed the generators. 
+
 Enabling OpenSSL FIPS mode only allows algorithms 
 specified in SP 800-90A and ANS X9.31
 However, we would prefer to just use algorithms 
@@ -34,7 +43,7 @@ Owing to limitations in the underlying OpenSSL libraries, this code is not threa
 
 Instructions:
 1) Change compiler and relavant path / include variables in the Makefile 
-to point to your OpenSSL install
+   to point to your OpenSSL install
 
 2) If you have compiled and installed the  OpenSSL FIPS module installed, 
   type make in the toplevel dir 
@@ -42,7 +51,7 @@ to point to your OpenSSL install
 3) If you just have OpenSSL installed, but have not compiled the 
    FIPS module, type make nist_target
    
-4) this builds two shared libs encapsulating OPenSSL RAND methods, 
+4) This builds two shared libs encapsulating OpenSSL RAND methods, 
    one in FIPS mode and the other without FIPS mode, as well as two test programs
 
 5) Depending on inclusion or lack of a FIPS build, you can run the test programs (i) ./cf_nist_rand and / or 
