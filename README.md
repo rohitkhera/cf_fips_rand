@@ -39,5 +39,5 @@ to point to your OpenSSL install
 4) this builds two shared libs encapsulating OPenSSL RAND methods, 
    one in FIPS mode and the other without FIPS mode, as well as two test programs
 
-5) Depending on your build, you can run the test programs as ./cf_nist_rand and / or 
-  ./cf_fips_rand 
+5) Depending on inclusion or lack of a FIPS build, you can run the test programs (i) ./cf_nist_rand and / or 
+  (ii) ./cf_fips_rand 
