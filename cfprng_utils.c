@@ -20,7 +20,7 @@
 
 
 
-#include "cf_fips_rand.h"
+#include "cfprng_fips_rand.h"
 
 
 /* 
@@ -30,7 +30,7 @@
       of the buffer
 */
 
-void explicit_seed(unsigned char* buf, int len) {
+int cfprng_explicit_seed(unsigned char* buf, int len) {
 
   ;  
 

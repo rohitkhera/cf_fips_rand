@@ -14,7 +14,7 @@
 *  Tested wth openssl-fips-2.0.11 and openssl-1.0.1r
 *  This file is compiled into a shared object that should 
 *  be placed in the caller's LD_LIBRARY_PATH (see 
-*  Makefile for compiler versions, fipsld, ld.so / c flags etc.
+*  Makefile for compiler versions, fipsld, ld.so / c flags etc.)
 *************************************************************************/ 
 
 
@@ -88,12 +88,14 @@ static char fips_label[] = "@(#)FIPS approved RAND";
       Not thread safe
 */
 
-  void explicit_seed(unsigned char* buf, int len);
+  int cfprng_explicit_seed(unsigned char* buf, int len);
 
 
-  /* This is not thread safe */
+  int cfrprng_set_rand_method();
 
-void cf_fips_rand();
+  void cfprng_fips_rand();
+
+  void cfprng_nist_rand();
 
 
 #ifdef  __cplusplus

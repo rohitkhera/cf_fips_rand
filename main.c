@@ -2,8 +2,8 @@
 
 /* Test program for cf_fips_rand() */
 
-#include "cf_fips_rand.h"
-#include <string.h>
+#include "cfprng_fips_rand.h"
+
 
 
 int main(int argc, char *argv[]) 
@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
     else break; 
   }
   
-  cf_fips_rand();
+  cfprng_nist_rand();
 
 
   exit(0);

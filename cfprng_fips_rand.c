@@ -17,10 +17,10 @@
 *  Makefile for compiler versions, fipsld, ld.so / c flags etc.
 *************************************************************************/    
 
-#include "cf_fips_rand.h"
+#include "cfprng_fips_rand.h"
 
 
-void cf_fips_rand()
+void cfprng_fips_rand()
 { 
 
 

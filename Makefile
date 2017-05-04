@@ -24,9 +24,9 @@ CC=gcc
 
 ARCH_FLAGS=-m32
 
-#CFLAGS=$(ARCH_FLAGS) $(INCLUDES) $(DEBUG_FLAGS)  -Wall 
+CFLAGS=$(ARCH_FLAGS) $(INCLUDES) $(DEBUG_FLAGS)  -Wall 
 
-CFLAGS=$(ARCH_FLAGS) $(INCLUDES) $(DEBUG_FLAGS) 
+#CFLAGS=$(ARCH_FLAGS) $(INCLUDES) $(DEBUG_FLAGS) 
 
 #LD_VERBOSE=-v
 
@@ -42,23 +42,22 @@ RELOC_FLAGS=-fpic
 
 INCLUDES=-I$(OPENSSLDIR)/include
 
-FIPS_SO_PREFIX=cf_fips_rand
-
+FIPS_SO_PREFIX=cfprng_fips_rand
 FIPS_SO=lib$(FIPS_SO_PREFIX).so
 
-NIST_SO_PREFIX=cf_nist_rand
+NIST_SO_PREFIX=cfprng_nist_rand
 
 NIST_SO=lib$(NIST_SO_PREFIX).so
 
-OBJS=main.o cf_rand_utils.o
+OBJS=main.o cfprng_utils.o
 
-SRCS1=cf_fips_rand.c \
-	cf_nist_rand.c \
-	cd_rand_utils.c
+SRCS1=cfprng_fips_rand.c \
+	cfprng_nist_rand.c \
+	cfprng_utils.c
 
 SRCS2=main.c
 
-HEADERS=cf_fips_rand.h
+HEADERS=cfprng_fips_rand.h
 
 FIPS_PROG=$(FIPS_SO_PREFIX)
 
@@ -82,8 +81,9 @@ $(FIPS_SO_PREFIX).o:
 $(FIPS_SO):  $(FIPS_SO_PREFIX).o
 	$(CC) $(SO_FLAGS) $(ARCH_FLAGS) -o $(FIPS_SO)  $(FIPS_SO_PREFIX).o  $(LIBS)
 
-$(FIPS_PROG): $(OBJS) 
-	FIPSLD_CC=$(CC) $(FIPS_LD) $(LIBS) $(OBJS) -o $(FIPS_PROG) -l$(FIPS_SO_PREFIX)
+$(FIPS_PROG): $(OBJS) $(NIST_SO)
+	FIPSLD_CC=$(CC) $(FIPS_LD) $(LIBS) $(OBJS) -o $(FIPS_PROG) -l$(FIPS_SO_PREFIX) -l$(NIST_SO_PREFIX)
+
 
 $(NIST_SO_PREFIX).o:
 	$(CC) -c $(CFLAGS) $(RELOC_FLAGS)  $(NIST_SO_PREFIX).c	
@@ -92,8 +92,8 @@ $(NIST_SO_PREFIX).o:
 $(NIST_SO):  $(NIST_SO_PREFIX).o
 	$(CC) $(SO_FLAGS) $(ARCH_FLAGS) -o $(NIST_SO)  $(NIST_SO_PREFIX).o  $(LIBS)
 
-$(NIST_PROG): $(OBJS)
-	$(CC) $(LD_FLAGS) $(LIBS) $(OBJS) -o $(NIST_PROG) -l$(NIST_SO_PREFIX)
+$(NIST_PROG): $(OBJS) $(FIPS_SO)
+	$(CC) $(LD_FLAGS) $(LIBS) $(OBJS) -o $(NIST_PROG) -l$(NIST_SO_PREFIX) -l$(FIPS_SO_PREFIX)
 
 
 nist_target: $(NIST_SO_PREFIX).o $(NIST_SO) $(NIST_PROG)

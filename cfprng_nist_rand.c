@@ -21,10 +21,10 @@
 
 /* generic header for cf_nist_rand and cf_fips_rand functions */
 
-#include "cf_fips_rand.h"
+#include "cfprng_fips_rand.h"
 
 
-void cf_fips_rand()
+void cfprng_nist_rand()
 { 
 
 
@@ -33,16 +33,6 @@ void cf_fips_rand()
   unsigned char key[16], iv[16];
 
 
-  /*
-  if(FIPS_mode_set(1)) { 
-    fputs("FIPS mode enabled\n",stderr); 
-  } 
-  else { 
-    ERR_load_crypto_strings(); 
-    ERR_print_errors_fp(stderr); 
-    exit(1); 
-  } 
-  */  
 
   /*
   int rc = RAND_load_file("/dev/urandom", 32);
