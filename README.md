@@ -3,9 +3,11 @@ Shared Objects wrapping OpenSSL NIST/ FIPS approved pseudo random number generat
 
 ANSI C wrapper code for 
 generating pseudo random  bytes (1)  Using NIST SP 800-90A algos, or (2) 
-Using NIST SP 800-90A algos with the OpenSSL FIPS module 
-Intended to address the goal in CF to only use 
-a PRNG specified in NIST SP 800-90A.
+Using NIST SP 800-90A algos with the OpenSSL FIPS module. 
+The intent is to address the goal of using  
+correctly seeded NIST SP 800-90A specified PRNGs for generation of IVs, 
+symmetric keys, nonces, salts and machine passwords. The SP 800-90A PRNGs
+cannot directly generate asymmetric keys. 
 Enabling OpenSSL FIPS mode only allows algorithms 
 specified in SP 800-90A and ANS X9.31
 However, we would prefer to just use algorithms 
@@ -16,6 +18,13 @@ Tested wth openssl-fips-2.0.11 and openssl-1.0.1r
 This file is compiled into a shared object that should 
 be placed in the caller's LD_LIBRARY_PATH (see 
 Makefile for compiler versions, fipsld, ld.so / c flags etc.)
+Tested with gcc version 
+# gcc -v 
+# Apple LLVM version 8.1.0 (clang-802.0.42)
+# Target: x86_64-apple-darwin16.5.0
+# Thread model: posix
+
+Owing to limitations in the underlying OpenSSL libraries, this code is not thread safe
 
 Instructions:
 1) Change compiler and relavant path / include variables in the Makefile 
