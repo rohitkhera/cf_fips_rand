@@ -19,10 +19,10 @@ This file is compiled into a shared object that should
 be placed in the caller's LD_LIBRARY_PATH (see 
 Makefile for compiler versions, fipsld, ld.so / c flags etc.)
 Tested with gcc version 
-# gcc -v 
-# Apple LLVM version 8.1.0 (clang-802.0.42)
-# Target: x86_64-apple-darwin16.5.0
-# Thread model: posix
+gcc -v 
+Apple LLVM version 8.1.0 (clang-802.0.42)
+Target: x86_64-apple-darwin16.5.0
+Thread model: posix
 
 Owing to limitations in the underlying OpenSSL libraries, this code is not thread safe
 
