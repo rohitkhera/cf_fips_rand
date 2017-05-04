@@ -10,7 +10,7 @@ symmetric keys, nonces, salts and machine passwords. The SP 800-90A PRNGs
 cannot directly generate asymmetric keys. Seeding of generators is 
 done explicitly, by extracting 256 bits of noise from the Linux entropy 
 pools. Entropy of the seed (measured in bits) is therefore
-256 based on Linux entropy pool's estimation 'heuristic' (refer to 
+256 bits based on the Linux entropy pool estimation 'heuristic' (refer to 
 https://ringcipher.com/2013/05/04/uncertainty-randomness-virtualization/ 
 for an explanation of this). Given this fact, the libraries 
 instantiate the NIST generators 
