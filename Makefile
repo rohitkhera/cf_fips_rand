@@ -25,7 +25,7 @@
 # 2) make cfprng_fips_static - builds cfprng_fips_rand_static
 #   statically linked to cfprng_fips_rand functionality
 #
-# 3) make cfprng_nist_reloc - builds cfprng_nist_rand
+# 3) make cfprng_nist_pic - builds cfprng_nist_rand
 #    and associated shlib
 #
 ###################################################
@@ -82,7 +82,7 @@ SRCS2=$(NIST_MAIN_PREFIX).c $(FIPS_MAIN_PREFIX).c
 
 SRCS_UTILS=cfprng_utils.c
 
-OBJS_NO_RELOC=$(FIPS_SO_PREFIX).o $(UTILS_PREFIX).o
+OBJS_NO_PIC=$(FIPS_SO_PREFIX).o $(UTILS_PREFIX).o
 
 HEADERS=cfprng_fips_rand.h
 
@@ -96,7 +96,7 @@ NIST_SO=lib$(NIST_SO_PREFIX).so
 
 FIPS_PROG=$(FIPS_SO_PREFIX)
 
-FIPS_PROG_NO_RELOC=cfprng_fips_rand_static
+FIPS_PROG_NO_PIC=cfprng_fips_rand_static
 
 NIST_PROG=$(NIST_SO_PREFIX)
 
@@ -121,15 +121,15 @@ $(FIPS_SO_PREFIX).o:
 	$(CC) -c $(CFLAGS) $(RELOC_FLAGS)  $(FIPS_SO_PREFIX).c
 
 
-$(FIPS_PROG_NO_RELOC)_OBJS: 
+$(FIPS_PROG_NO_PIC)_OBJS: 
 	make clean 
 	$(CC) -c $(CFLAGS) $(FIPS_SO_PREFIX).c	
 	$(CC) -c $(CFLAGS) $(UTILS_PREFIX).c
 	$(CC) -c $(CFLAGS) $(FIPS_MAIN_PREFIX).c
 
 
-$(FIPS_PROG_NO_RELOC): $(FIPS_PROG_NO_RELOC)_OBJS
-	FIPSLD_CC=$(CC) $(FIPS_LD) $(LIBS) $(OBJS_NO_RELOC) $(FIPS_MAIN_PREFIX).o -o $(FIPS_PROG_NO_RELOC) 
+$(FIPS_PROG_NO_PIC): $(FIPS_PROG_NO_PIC)_OBJS
+	FIPSLD_CC=$(CC) $(FIPS_LD) $(LIBS) $(OBJS_NO_PIC) $(FIPS_MAIN_PREFIX).o -o $(FIPS_PROG_NO_PIC) 
 
 
 $(FIPS_SO):  $(FIPS_SO_PREFIX).o
@@ -152,14 +152,27 @@ $(NIST_PROG): $(OBJS) $(NIST_MAIN_PREFIX).o
 	$(CC) $(LD_FLAGS) $(LIBS) $(OBJS) $(NIST_MAIN_PREFIX).o -o $(NIST_PROG) -l$(NIST_SO_PREFIX) 
 
 
-$(NIST_PROG)_reloc: $(NIST_TARGETS)
+$(NIST_PROG)_pic: $(NIST_TARGETS)
+
+
+tests1:
+	./cfprng_fips_rand
+	./cfprng_nist_rand
+
+
+tests2:
+	./cfprng_fips_rand_static
+
+tests3:
+	./cfprng_nist_rand
+
 
 clean:
-	@rm -rf *.o $(TARGETS) $(FIPS_PROG_NO_RELOC)
+	@rm -rf *.o $(TARGETS) $(FIPS_PROG_NO_PIC)
 
 
 ##############################################
-# suffix rules
+# suffixes
 ##############################################
 
 
