@@ -16,6 +16,18 @@
 # If you do not have an openssl FIPS module compiled
 # then comment out the Variable FIPS_TARGETS
 # since you will not be building this target
+#
+# Toplevel commands are as follows
+#
+# 1) make - builds shlibs, cfprng_fips_rand & cfprng_nist_rand 
+#           programs
+#
+# 2) make cfprng_fips_static - builds cfprng_fips_rand_static
+#   statically linked to cfprng_fips_rand functionality
+#
+# 3) make cfprng_nist_reloc - builds cfprng_nist_rand
+#    and associated shlib
+#
 ###################################################
 
 ###################################################
@@ -84,7 +96,7 @@ NIST_SO=lib$(NIST_SO_PREFIX).so
 
 FIPS_PROG=$(FIPS_SO_PREFIX)
 
-FIPS_PROG_NO_RELOC=cfprng_fips_static
+FIPS_PROG_NO_RELOC=cfprng_fips_rand_static
 
 NIST_PROG=$(NIST_SO_PREFIX)
 
@@ -140,7 +152,7 @@ $(NIST_PROG): $(OBJS) $(NIST_MAIN_PREFIX).o
 	$(CC) $(LD_FLAGS) $(LIBS) $(OBJS) $(NIST_MAIN_PREFIX).o -o $(NIST_PROG) -l$(NIST_SO_PREFIX) 
 
 
-nist_target: $(NIST_SO_PREFIX).o $(NIST_SO) $(NIST_PROG)
+$(NIST_PROG)_reloc: $(NIST_TARGETS)
 
 clean:
 	@rm -rf *.o $(TARGETS) $(FIPS_PROG_NO_RELOC)
