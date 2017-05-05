@@ -1,6 +1,6 @@
 ###################################################
 # R Khera 5/3/17
-# Compile cf_nist_rand.c and cf_fips_rand.c into .so's
+# Compile cfprng_nist_rand.c and cfprng_fips_rand.c into .so's
 # -m32 CFLAGS needed since openssl libs 
 # were compied in 32 bit mode and without 
 # this flag ld.so looks for x86_64 symbols .
