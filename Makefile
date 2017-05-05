@@ -18,15 +18,21 @@
 # since you will not be building this target
 ###################################################
 
+###################################################
+# cc and ld flags
+###################################################
+
 CC=gcc
 
+###################################################
 #DEBUG_FLAGS=-DDEBUG_FINGERPRINT_PREMAIN
+###################################################
 
 ARCH_FLAGS=-m32
 
-CFLAGS=$(ARCH_FLAGS) $(INCLUDES) $(DEBUG_FLAGS)  -Wall 
+#CFLAGS=$(ARCH_FLAGS) $(INCLUDES) $(DEBUG_FLAGS)  -Wall 
 
-#CFLAGS=$(ARCH_FLAGS) $(INCLUDES) $(DEBUG_FLAGS) 
+CFLAGS=$(ARCH_FLAGS) $(INCLUDES) $(DEBUG_FLAGS) 
 
 #LD_VERBOSE=-v
 
@@ -42,29 +48,43 @@ RELOC_FLAGS=-fpic
 
 INCLUDES=-I$(OPENSSLDIR)/include
 
-FIPS_SO_PREFIX=cfprng_fips_rand
+############################################
+# srcs, hdrs, obs and shared objs
+############################################
 
-FIPS_SO=lib$(FIPS_SO_PREFIX).so
+FIPS_SO_PREFIX=cfprng_fips_rand
 
 NIST_SO_PREFIX=cfprng_nist_rand
 
-NIST_SO=lib$(NIST_SO_PREFIX).so
+NIST_MAIN_PREFIX=cfprng_nist_main
 
-OBJS=cfprng_utils.o
+FIPS_MAIN_PREFIX=cfprng_fips_main
 
-NIST_MAIN=cfprng_nist_main.o
-
-FIPS_MAIN=cfprng_fips_main.o
+UTILS_PREFIX=cfprng_utils
 
 SRCS1=cfprng_fips_rand.c \
 	cfprng_nist_rand.c \
-	cfprng_utils.c
+	$(UTILS_PREFIX).c
 
-SRCS2=cfprng_nist_main.c cfprng_fips_main.c
+SRCS2=$(NIST_MAIN_PREFIX).c $(FIPS_MAIN_PREFIX).c
+
+SRCS_UTILS=cfprng_utils.c
+
+OBJS_NO_RELOC=$(FIPS_SO_PREFIX).o $(UTILS_PREFIX).o
 
 HEADERS=cfprng_fips_rand.h
 
+##############################################
+# shlib targets, exec targets, toplevel targets
+##############################################
+
+FIPS_SO=lib$(FIPS_SO_PREFIX).so
+
+NIST_SO=lib$(NIST_SO_PREFIX).so
+
 FIPS_PROG=$(FIPS_SO_PREFIX)
+
+FIPS_PROG_NO_RELOC=cfprng_fips_static
 
 NIST_PROG=$(NIST_SO_PREFIX)
 
@@ -74,20 +94,38 @@ NIST_TARGETS=$(NIST_SO) $(NIST_PROG)
 
 TARGETS=$(FIPS_TARGETS) $(NIST_TARGETS)
 
+#############################################
+# fips commands
+##############################################
+
 FIPS_LD=$(OPENSSLDIR)/fips-2.0/bin/fipsld $(LD_FLAGS)
 
 
 
 all: $(TARGETS)
 
+
 $(FIPS_SO_PREFIX).o: 
 	$(CC) -c $(CFLAGS) $(RELOC_FLAGS)  $(FIPS_SO_PREFIX).c
+
+
+$(FIPS_PROG_NO_RELOC)_OBJS: 
+	make clean 
+	$(CC) -c $(CFLAGS) $(FIPS_SO_PREFIX).c	
+	$(CC) -c $(CFLAGS) $(UTILS_PREFIX).c
+	$(CC) -c $(CFLAGS) $(FIPS_MAIN_PREFIX).c
+
+
+$(FIPS_PROG_NO_RELOC): $(FIPS_PROG_NO_RELOC)_OBJS
+	FIPSLD_CC=$(CC) $(FIPS_LD) $(LIBS) $(OBJS_NO_RELOC) $(FIPS_MAIN_PREFIX).o -o $(FIPS_PROG_NO_RELOC) 
+
 
 $(FIPS_SO):  $(FIPS_SO_PREFIX).o
 	$(CC) $(SO_FLAGS) $(ARCH_FLAGS) -o $(FIPS_SO)  $(FIPS_SO_PREFIX).o  $(LIBS)
 
-$(FIPS_PROG): $(OBJS) $(FIPS_MAIN) $(NIST_SO)
-	FIPSLD_CC=$(CC) $(FIPS_LD) $(LIBS) $(OBJS) $(FIPS_MAIN) -o $(FIPS_PROG) -l$(FIPS_SO_PREFIX) -l$(NIST_SO_PREFIX)
+
+$(FIPS_PROG): $(OBJS) $(FIPS_MAIN_PREFIX).o
+	FIPSLD_CC=$(CC) $(FIPS_LD) $(LIBS) $(OBJS) $(FIPS_MAIN_PREFIX).o -o $(FIPS_PROG) -l$(FIPS_SO_PREFIX) 
 
 
 $(NIST_SO_PREFIX).o:
@@ -97,14 +135,21 @@ $(NIST_SO_PREFIX).o:
 $(NIST_SO):  $(NIST_SO_PREFIX).o
 	$(CC) $(SO_FLAGS) $(ARCH_FLAGS) -o $(NIST_SO)  $(NIST_SO_PREFIX).o  $(LIBS)
 
-$(NIST_PROG): $(OBJS) $(NIST_MAIN) $(FIPS_SO)
-	$(CC) $(LD_FLAGS) $(LIBS) $(OBJS) $(NIST_MAIN) -o $(NIST_PROG) -l$(NIST_SO_PREFIX) -l$(FIPS_SO_PREFIX)
+
+$(NIST_PROG): $(OBJS) $(NIST_MAIN_PREFIX).o 
+	$(CC) $(LD_FLAGS) $(LIBS) $(OBJS) $(NIST_MAIN_PREFIX).o -o $(NIST_PROG) -l$(NIST_SO_PREFIX) 
 
 
 nist_target: $(NIST_SO_PREFIX).o $(NIST_SO) $(NIST_PROG)
 
 clean:
-	@rm -rf *.o $(TARGETS)
+	@rm -rf *.o $(TARGETS) $(FIPS_PROG_NO_RELOC)
+
+
+##############################################
+# suffix rules
+##############################################
+
 
 .c.o:
 	$(CC) -c $(CFLAGS) $(RELOC_FLAGS) $<

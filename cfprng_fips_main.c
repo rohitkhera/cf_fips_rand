@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
     else break; 
   }
   
-  cfprng_nist_rand();
+  cfprng_fips_rand();
 
 
   exit(0);

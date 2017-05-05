@@ -54,5 +54,5 @@ Instructions:
 4) This builds two shared libs encapsulating OpenSSL RAND methods, 
    one in FIPS mode and the other without FIPS mode, as well as two test programs
 
-5) Depending on inclusion or lack of a FIPS build, you can run the test programs (i) ./cf_nist_rand and / or 
-  (ii) ./cf_fips_rand 
+5) Depending on inclusion or lack of a FIPS build, you can run the test programs (i) ./cfprng_nist_rand and / or 
+  (ii) ./cfprng_fips_rand 
