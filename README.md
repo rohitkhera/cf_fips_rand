@@ -1,4 +1,4 @@
-# cf_fips_rand
+# cfprng_fips_rand
 Shared Objects wrapping OpenSSL NIST/ FIPS approved pseudo random number generators
 
 ANSI C wrapper code for 
