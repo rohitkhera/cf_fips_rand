@@ -34,6 +34,12 @@ extern "C" {
 #include <openssl/err.h>
 #include <openssl/rand.h>
 
+  /* ERROR CODES */
+
+#define CFPRNG_SUCCESS 0x00U
+#define CFPRNG_ERR 0x01U
+
+
 /*
 typedef struct 
 {
@@ -86,10 +92,22 @@ static char fips_label[] = "@(#)FIPS approved RAND";
    2) int - seed length (this should be equal to the length 
       of the buffer
       Not thread safe
+   RetVal : CFPRNG_ERR, CFPRNG_SUCCESS
+   
 */
 
   int cfprng_explicit_seed(unsigned char* buf, int len);
 
+
+/* 
+   Lifted from <openssl>/crypto/rand/randtst.c
+   args: None
+   RetVal : CFPRNG_ERR, CFPRNG_SUCCESS
+
+   
+*/
+
+  int cfprng_fips_tests();
 
   int cfrprng_set_rand_method();
 
