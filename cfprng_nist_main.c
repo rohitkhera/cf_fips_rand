@@ -30,6 +30,10 @@ int main(int argc, char *argv[])
   }
   
   cfprng_nist_rand();
+  if(cfprng_fips_tests())
+    fprintf(stderr, "%s : ln %d : Failed simple FIPS statistical tests\n", __FILE__, __LINE__);
+  else
+    fprintf(stderr, "%s : ln %d : Passed simple FIPS statistical tests\n", __FILE__, __LINE__);
 
 
   exit(0);

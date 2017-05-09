@@ -100,7 +100,7 @@ static char fips_label[] = "@(#)FIPS approved RAND";
 
 
 /* 
-   Lifted from <openssl>/crypto/rand/randtst.c
+   Lifted from <openssl>/crypto/rand/randtest.c
    args: None
    RetVal : CFPRNG_ERR, CFPRNG_SUCCESS
 

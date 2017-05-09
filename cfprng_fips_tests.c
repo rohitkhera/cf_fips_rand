@@ -8,7 +8,7 @@
 //#include <openssl/e_os.h>
 
 /* some FIPS 140-1 random number test */
-/* some simple tests */
+/* taken from openssl-1.0.1h <openssl>/crpyto/rand/randtest.c */
 
 int cfprng_fips_tests()
 {

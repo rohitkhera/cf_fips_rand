@@ -50,9 +50,9 @@ CFLAGS=$(ARCH_FLAGS) $(INCLUDES) $(DEBUG_FLAGS)
 
 LD_FLAGS=$(ARCH_FLAGS) $(DEBUG_FLAGS) $(LD_VERBOSE)
 
-OPENSSLDIR=/usr/local/ssl/
+OPENSSLDIR=/usr/local/ssl
 
-LIBS=-L/usr/local/ssl/lib/ -L. -lcrypto -ldl 
+LIBS=-L$(OPENSSLDIR)/lib/ -L. -lcrypto -ldl 
 
 SO_FLAGS=-shared
 
