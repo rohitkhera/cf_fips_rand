@@ -22,10 +22,10 @@
 # 1) make - builds shlibs, cfprng_fips_rand & cfprng_nist_rand 
 #           programs
 #
-# 2) make cfprng_fips_static - builds cfprng_fips_rand_static
+# 2) make cfprng_fips_rand_static - builds cfprng_fips_rand_static
 #   statically linked to cfprng_fips_rand functionality
 #
-# 3) make cfprng_nist_pic - builds cfprng_nist_rand
+# 3) make cfprng_nist_rand_pic - builds cfprng_nist_rand
 #    and associated shlib
 #
 ###################################################
@@ -87,6 +87,8 @@ SRCS2=$(NIST_MAIN_PREFIX).c $(FIPS_MAIN_PREFIX).c
 SRCS_UTILS=cfprng_utils.c
 
 OBJS=$(FIPS_SO_PREFIX).o $(UTILS_PREFIX).o $(FIPS_TESTS_PREFIX).o
+
+NIST_OBJS=$(UTILS_PREFIX).o $(FIPS_TESTS_PREFIX).o
 
 HEADERS=cfprng_fips_rand.h
 
@@ -155,8 +157,8 @@ $(NIST_SO):  $(NIST_SO_PREFIX).o
 	$(CC) $(SO_FLAGS) $(ARCH_FLAGS) -o $(NIST_SO)  $(NIST_SO_PREFIX).o  $(LIBS)
 
 
-$(NIST_PROG): $(OBJS) $(NIST_MAIN_PREFIX).o 
-	$(CC) $(LD_FLAGS) $(LIBS) $(OBJS) $(NIST_MAIN_PREFIX).o -o $(NIST_PROG) -l$(NIST_SO_PREFIX) 
+$(NIST_PROG): $(NIST_OBJS) $(NIST_MAIN_PREFIX).o 
+	$(CC) $(LD_FLAGS) $(LIBS) $(NIST_OBJS) $(NIST_MAIN_PREFIX).o -o $(NIST_PROG) -l$(NIST_SO_PREFIX) 
 
 
 $(NIST_PROG)_pic: $(NIST_TARGETS)
