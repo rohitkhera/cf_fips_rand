@@ -64,6 +64,7 @@ INCLUDES=-I$(OPENSSLDIR)/include
 # srcs, hdrs, obs and shared objs
 ############################################
 
+
 FIPS_SO_PREFIX=cfprng_fips_rand
 
 NIST_SO_PREFIX=cfprng_nist_rand
@@ -74,17 +75,21 @@ FIPS_MAIN_PREFIX=cfprng_fips_main
 
 UTILS_PREFIX=cfprng_utils
 
+FIPS_TESTS_PREFIX=cfprng_fips_tests
+
 SRCS1=cfprng_fips_rand.c \
 	cfprng_nist_rand.c \
-	$(UTILS_PREFIX).c
+	$(UTILS_PREFIX).c \
+	$(FIPS_TESTS_PREFIX).c
 
 SRCS2=$(NIST_MAIN_PREFIX).c $(FIPS_MAIN_PREFIX).c
 
 SRCS_UTILS=cfprng_utils.c
 
-OBJS_NO_PIC=$(FIPS_SO_PREFIX).o $(UTILS_PREFIX).o
+OBJS=$(FIPS_SO_PREFIX).o $(UTILS_PREFIX).o $(FIPS_TESTS_PREFIX).o
 
 HEADERS=cfprng_fips_rand.h
+
 
 ##############################################
 # shlib targets, exec targets, toplevel targets
@@ -110,6 +115,7 @@ TARGETS=$(FIPS_TARGETS) $(NIST_TARGETS)
 # fips commands
 ##############################################
 
+
 FIPS_LD=$(OPENSSLDIR)/fips-2.0/bin/fipsld $(LD_FLAGS)
 
 
@@ -126,6 +132,7 @@ $(FIPS_PROG_NO_PIC)_OBJS:
 	$(CC) -c $(CFLAGS) $(FIPS_SO_PREFIX).c	
 	$(CC) -c $(CFLAGS) $(UTILS_PREFIX).c
 	$(CC) -c $(CFLAGS) $(FIPS_MAIN_PREFIX).c
+	$(CC) -c $(CFLAGS) $(FIPS_TEST_PREFIX).c
 
 
 $(FIPS_PROG_NO_PIC): $(FIPS_PROG_NO_PIC)_OBJS
