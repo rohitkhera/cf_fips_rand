@@ -39,20 +39,50 @@ Apple LLVM version 8.1.0 (clang-802.0.42)
 Target: x86_64-apple-darwin16.5.0
 Thread model: posix
 
+
 Owing to limitations in the underlying OpenSSL libraries, this code is not thread safe
 
+The following toplevel make targets are defined
+
+a) make - builds shlibs, cfprng_fips_rand & cfprng_nist_rand 
+           programs, java jni wrapper classes and jni .so
+
+b) make cfprng_fips_rand_static - builds cfprng_fips_rand_static
+  statically linked to cfprng_fips_rand functionality
+
+c) make cfprng_nist_rand_pic - builds cfprng_nist_rand
+    and associated shlib, java jni wrapper classes and jni .so
+
 Instructions:
-1) Change compiler and relavant path / include variables in the Makefile 
-   to point to your OpenSSL install
 
-2) If you have compiled and installed the  OpenSSL FIPS module installed, 
-  type make in the toplevel dir 
+1) Change compiler (cc, javac) and relavant path / include variables in the Makefile 
+   to point to your OpenSSL install, java intall and jni header files
 
-3) If you just have OpenSSL installed, but have not compiled the 
-   FIPS module, type make nist_target
+2) If you have the OpenSSL FIPS module compiled use target (a) above 
+   to build the shlibls, programs, java classes and jni shlib
+
+3) If you just wish to compile the statically linked fips program
+   use target (a) above (requires that you compile / install OpenSSL FIPS module
+
+4) If you just have OpenSSL installed, but have not compiled the 
+   FIPS module, use build target (b) above
    
-4) This builds two shared libs encapsulating OpenSSL RAND methods, 
-   one in FIPS mode and the other without FIPS mode, as well as two test programs
 
-5) Depending on inclusion or lack of a FIPS build, you can run the test programs (i) ./cfprng_nist_rand and / or 
-  (ii) ./cfprng_fips_rand 
+
+5) The following run targets are defined (requires setting LD_LIBRARY_PATH and 
+   java.library.path)
+
+
+run1:
+	./cfprng_fips_rand
+	./cfprng_nist_rand
+
+run2:
+	./cfprng_fips_rand_static
+
+run3:
+	./cfprng_nist_rand
+
+
+run4:
+	java -Djava.library.path=$(JAVA_LIB_PATH) CfprngRand

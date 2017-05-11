@@ -24,7 +24,7 @@ int cfprng_fips_tests()
     long d;
 
     /* suppress CFPRNG_MAX_RAND_BYTES check */
-    i = RAND_pseudo_bytes(buf, 2500);
+    i = RAND_bytes(buf, 2500);
     if (i < 0) {
 #ifdef CFPRNG_LOG_LEVEL_ERR
       fprintf(stderr, "%s : ln %d :init failed, the rand method is not properly installed\n", __FILE__, __LINE__);

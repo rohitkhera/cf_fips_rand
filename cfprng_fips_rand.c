@@ -17,46 +17,55 @@
 *  Makefile for compiler versions, fipsld, ld.so / c flags etc.
 *************************************************************************/    
 
+/* generic header for cf_nist_rand and cf_fips_rand functions */
+
 #include "cfprng_fips_rand.h"
 
-
-void cfprng_fips_rand()
+int cfprng_fips_rand(unsigned char* buf, int len)
 { 
-
 
   const RAND_METHOD* rm = RAND_get_rand_method();
 
-  unsigned char key[16], iv[16];
+  if(len > CFPRNG_MAX_RAND_BYTES) {
+#ifdef CFPRNG_LOG_LEVEL_ERR
+    fprintf(stderr, "%s: %d : length exceeds %d", __FILE__, __LINE__, CFPRNG_MAX_RAND_BYTES );
+#endif
+    return CFPRNG_ERR;
+  }
 
-
-  /* Enter FIPS mode by default */ 
+  /* Enter FIPS mode */
   if(FIPS_mode_set(1)) { 
-    fputs("FIPS mode enabled\n",stderr); 
+#ifdef CFPRNG_LOG_LEVEL_INFO
+    fprintf(stderr,"FIPS mode enabled\n"); 
+#endif
   } 
   else { 
+#ifdef CFPRNG_LOG_LEVEL_INFO
     ERR_load_crypto_strings(); 
     ERR_print_errors_fp(stderr); 
-    exit(1); 
+#endif
+    return CFPRNG_ERR;
   } 
-  
 
-  /*
+  /* phase this out  since by default RAND_bytes() 
+   * should seed from the LRNG entropy pools */  
+
   int rc = RAND_load_file("/dev/urandom", 32);
   if(rc != 32) {
-    printf("could not open /dev/random\n");
+#ifdef CFPRNG_LOG_LEVEL_ERR
+    fprintf(stderr, "%s: %d :could not open /dev/urandom\n", __FILE__, __LINE__ );
+#endif
+    return CFPRNG_ERR;
   }
-  else {
-    printf("Opened /dev/urandom\n");
-  }
- */
 
-  if (!RAND_bytes(key, sizeof key)) {
-    fputs("RAND bytes failed\n",stderr);
+  if (!RAND_bytes(buf, len)) {
+#ifdef CFPRNG_LOG_LEVEL_ERR    
+    fprintf(stderr, "%s: %d : RAND_bytes() fail\n", __FILE__, __LINE__ );
+#endif
+    return CFPRNG_ERR;
   }
-  if (!RAND_bytes(iv, sizeof iv)) {
-    fputs("RAND bytes failed\n",stderr);
-
-  }
+  else 
+    return CFPRNG_SUCCESS;
 
 }
 
