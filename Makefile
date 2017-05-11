@@ -58,11 +58,9 @@ JAVAH=$(JAVA_PATH)javah
 
 #JAVA_LIB_PATH="/home/user/workspace/cfprng_fips_rand"
 
-JAVA_LIB_PATH="/home/user/workspace/cfprng_fips_rand"
+JAVA_LIB_PATH="$(LD_LIBRARY_PATH)"
 
-###################################################
 #DEBUG_FLAGS=-DDEBUG_FINGERPRINT_PREMAIN
-###################################################
 
 #JNI_MD_ARCH=darwin
 
@@ -78,7 +76,9 @@ LOG_LEVEL_FLAGS=-DCFPRNG_LOG_LEVEL_ERR -DCFPRNG_LOG_LEVEL_INFO
 
 #ARCH_FLAGS=-m32
 
-CFLAGS=$(ARCH_FLAGS) $(INCLUDES) $(JNI_INCLUDES) $(JNI_INCLUDES_MD) $(DEBUG_FLAGS)  $(LOG_LEVEL_FLAGS) -Wall 
+NO_UNUSED_VAR_CFLAGS=-Wno-unused-variable
+
+CFLAGS=$(ARCH_FLAGS) $(INCLUDES) $(JNI_INCLUDES) $(JNI_INCLUDES_MD) $(DEBUG_FLAGS)  $(LOG_LEVEL_FLAGS) -Wall $(NO_UNUSED_VAR_CFLAGS)
 
 #CFLAGS=$(ARCH_FLAGS) $(INCLUDES) $(DEBUG_FLAGS) $(LOG_LEVEL_FLAGS)
 
