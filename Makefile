@@ -1,5 +1,5 @@
 ###################################################
-# R Khera 5/3/17
+# R Khera 5/7/17
 # Compile cfprng_nist_rand.c and cfprng_fips_rand.c into .so's
 # -m32 CFLAGS needed since openssl libs 
 # were compied in 32 bit mode and without 
