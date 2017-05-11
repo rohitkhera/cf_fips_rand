@@ -21,6 +21,7 @@ JNIEXPORT jint JNICALL Java_CfprngRand_cfprng_1fips_1rand
  */
 JNIEXPORT jint JNICALL Java_CfprngRand_cfprng_1nist_1rand
 (JNIEnv * env, jobject obj, jbyteArray buf, jint len) {
+
   if(cfprng_nist_rand((unsigned char*) buf, (int) len)) {
     fprintf(stderr, "%s : ERROR\n", __FILE__);
     return (jint)CFPRNG_ERR;
@@ -36,7 +37,7 @@ JNIEXPORT jint JNICALL Java_CfprngRand_cfprng_1nist_1rand
  */
 JNIEXPORT jint JNICALL Java_CfprngRand_cfprng_1fips_1tests
 (JNIEnv * env, jobject obj) {
-
+  cfprng_fips_tests();
   return (jint) CFPRNG_ERR;
 }
 
