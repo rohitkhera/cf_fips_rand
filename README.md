@@ -56,18 +56,17 @@ c) make cfprng_nist_rand_pic - builds cfprng_nist_rand
 Instructions:
 
 1) Change compiler (cc, javac) and relavant path / include variables in the Makefile 
-   to point to your OpenSSL install, java intall and jni header files
+   to point to your OpenSSL install, java install and jni header files
 
 2) If you have the OpenSSL FIPS module compiled use target (a) above 
-   to build the shlibls, programs, java classes and jni shlib
+   to build the shlibs, programs, java classes and jni shlib
 
 3) If you just wish to compile the statically linked fips program
-   use target (a) above (requires that you compile / install OpenSSL FIPS module
+   use target (a) above (requires that you compile / install OpenSSL FIPS module)
 
 4) If you just have OpenSSL installed, but have not compiled the 
-   FIPS module, use build target (b) above
+   FIPS module, use build target (c) above
    
-
 
 5) The following run targets are defined (requires setting LD_LIBRARY_PATH and 
    java.library.path)
