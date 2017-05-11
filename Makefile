@@ -19,14 +19,28 @@
 #
 # Toplevel commands are as follows
 #
-# 1) make - builds shlibs, cfprng_fips_rand & cfprng_nist_rand 
-#           programs
+# a) make - builds shlibs, cfprng_fips_rand & cfprng_nist_rand 
+#           programs, java jni wrapper classes and jni .so
 #
-# 2) make cfprng_fips_rand_static - builds cfprng_fips_rand_static
+# b) make cfprng_fips_rand_static - builds cfprng_fips_rand_static
 #   statically linked to cfprng_fips_rand functionality
 #
-# 3) make cfprng_nist_rand_pic - builds cfprng_nist_rand
-#    and associated shlib
+# c) make cfprng_nist_rand_pic - builds cfprng_nist_rand
+#    and associated shlib, java jni wrapper classes and jni .so
+#
+# Instructions:
+#
+# 1) Change compiler (cc, javac) and relavant path / include variables 
+# in the Makefile to point to your OpenSSL install, java install and jni header files
+#
+# 2) If you have the OpenSSL FIPS module compiled use target (a) above to 
+# build the shlibs, programs, java classes and jni shlib
+#
+# 3) If you just wish to compile the statically linked fips program use 
+# target (a) above (requires that you compile / install OpenSSL FIPS module)
+#
+# 4) If you just have OpenSSL installed, but have not compiled 
+# the FIPS module, use build target (c) above
 #
 ###################################################
 
@@ -74,6 +88,7 @@ RELOC_FLAGS=-fpic
 
 INCLUDES=-I$(OPENSSLDIR)/include
 
+LD_LIBRARY_PATH=$(OPENSSLDIR)/lib/:.
 
 ############################################
 # srcs, hdrs, obs and shared objs
@@ -194,15 +209,15 @@ javah: $(JAVA_CLASSES)
 	javah -jni CfprngRand
 
 run1:
-	./cfprng_fips_rand
-	./cfprng_nist_rand
+	export LD_LIBRARY_PATH=$(LD_LIBRARY_PATH);./cfprng_fips_rand
+	export LD_LIBRARY_PATH=$(LD_LIBRARY_PATH);./cfprng_nist_rand
 
 
 run2:
-	./cfprng_fips_rand_static
+	export LD_LIBRARY_PATH=$(LD_LIBRARY_PATH);./cfprng_fips_rand_static
 
 run3:
-	./cfprng_nist_rand
+	export LD_LIBRARY_PATH=$(LD_LIBRARY_PATH);./cfprng_nist_rand
 
 
 run4:
