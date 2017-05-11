@@ -149,7 +149,7 @@ CFPRNG_JNI_SO=libcfprng_rand_jni.so
 
 FIPS_PROG=$(FIPS_SO_PREFIX)
 
-FIPS_PROG_NO_PIC=cfprng_fips_rand_static
+FIPS_PROG_NO_PIC=$(FIPS_PROG)_static
 
 NIST_PROG=$(NIST_SO_PREFIX)
 
