@@ -17,9 +17,6 @@
 *  Makefile for compiler versions, fipsld, ld.so / c flags etc.)
 *************************************************************************/ 
 
-
-
-
 #ifndef HEADER_CF_FIPS_RAND_H
 # define HEADER_CF_FIPS_RAND_H  
 
@@ -34,11 +31,12 @@ extern "C" {
 #include <openssl/err.h>
 #include <openssl/rand.h>
 
+#define CFPRNG_MAX_RAND_BYTES 1024
+
   /* ERROR CODES */
 
 #define CFPRNG_SUCCESS 0x00U
 #define CFPRNG_ERR 0x01U
-
 
 /*
 typedef struct 
@@ -84,8 +82,6 @@ static DRBG_LIST drbg_types[] =
 
 static char fips_label[] = "@(#)FIPS approved RAND"; 
 
-  
-
 /* 
    args: 
    1) unsigned char* - unsigned char buffer to hold the seed
@@ -93,7 +89,7 @@ static char fips_label[] = "@(#)FIPS approved RAND";
       of the buffer
       Not thread safe
    RetVal : CFPRNG_ERR, CFPRNG_SUCCESS
-   
+   Currently not implemented
 */
 
   int cfprng_explicit_seed(unsigned char* buf, int len);
@@ -102,19 +98,33 @@ static char fips_label[] = "@(#)FIPS approved RAND";
 /* 
    Lifted from <openssl>/crypto/rand/randtest.c
    args: None
-   RetVal : CFPRNG_ERR, CFPRNG_SUCCESS
-
-   
+   Return val : CFPRNG_ERR, CFPRNG_SUCCESS
 */
 
   int cfprng_fips_tests();
 
+/*
+  Currently not implemented
+*/
+
   int cfrprng_set_rand_method();
 
-  void cfprng_fips_rand();
+/* 
+   args: (1) unsigned char* - buf of max len CFPRNG_MAX_RAND_BYTES
+         (2) int - length of buffer
+   Return val : CFPRNG_ERR, CFPRNG_SUCCESS
+*/
 
-  void cfprng_nist_rand();
+  int cfprng_nist_rand(unsigned char* buf, int len);
 
+/* 
+   Same as above but calls FIPS_mode_set(1)
+   args: (1) unsigned char* - buf of max len CFPRNG_MAX_RAND_BYTES
+         (2) int - length of buffer
+   Return val : CFPRNG_ERR, CFPRNG_SUCCESS
+*/
+
+  int cfprng_fips_rand(unsigned char* buf, int len);
 
 #ifdef  __cplusplus
 }
