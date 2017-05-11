@@ -50,25 +50,33 @@
 
 CC=gcc
 
-JAVAC=javac
+JAVA_PATH=/usr/lib/jvm/java-8-oracle/bin/
 
-JAVAH=javah
+JAVAC=$(JAVA_PATH)javac
 
-JAVA_LIB_PATH="/Users/rkhera/Downloads/cf_fips_rand"
+JAVAH=$(JAVA_PATH)javah
+
+#JAVA_LIB_PATH="/home/user/workspace/cfprng_fips_rand"
+
+JAVA_LIB_PATH="/home/user/workspace/cfprng_fips_rand"
 
 ###################################################
 #DEBUG_FLAGS=-DDEBUG_FINGERPRINT_PREMAIN
 ###################################################
 
-JNI_MD_ARCH=darwin
+#JNI_MD_ARCH=darwin
 
-JNI_INCLUDES=-I/Library/Java/JavaVirtualMachines/jdk1.8.0_73.jdk/Contents/Home/include/
+JNI_MD_ARCH=linux
+
+#JNI_INCLUDES=-I/Library/Java/JavaVirtualMachines/jdk1.8.0_73.jdk/Contents/Home/include/
+
+JNI_INCLUDES=-I/usr/lib/jvm/java-8-oracle/include/
 
 JNI_INCLUDES_MD=$(JNI_INCLUDES)/$(JNI_MD_ARCH)
 
 LOG_LEVEL_FLAGS=-DCFPRNG_LOG_LEVEL_ERR -DCFPRNG_LOG_LEVEL_INFO
 
-ARCH_FLAGS=-m32
+#ARCH_FLAGS=-m32
 
 CFLAGS=$(ARCH_FLAGS) $(INCLUDES) $(JNI_INCLUDES) $(JNI_INCLUDES_MD) $(DEBUG_FLAGS)  $(LOG_LEVEL_FLAGS) -Wall 
 
@@ -78,7 +86,7 @@ CFLAGS=$(ARCH_FLAGS) $(INCLUDES) $(JNI_INCLUDES) $(JNI_INCLUDES_MD) $(DEBUG_FLAG
 
 LD_FLAGS=$(ARCH_FLAGS) $(DEBUG_FLAGS) $(LD_VERBOSE)
 
-OPENSSLDIR=/usr/local/ssl
+OPENSSLDIR=/home/user/Downloads/openssl-1.1.0e/myinstall
 
 LIBS=-L$(OPENSSLDIR)/lib/ -L. -lcrypto -ldl 
 
@@ -206,7 +214,7 @@ $(CFPRNG_JNI_SO): javah  cfprng_rand_java_wrapper.o
 
 
 javah: $(JAVA_CLASSES)
-	javah -jni CfprngRand
+	$(JAVAH) -jni CfprngRand
 
 run1:
 	export LD_LIBRARY_PATH=$(LD_LIBRARY_PATH);./cfprng_fips_rand
