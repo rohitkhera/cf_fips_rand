@@ -17,11 +17,7 @@
 *  Makefile for compiler versions, fipsld, ld.so / c flags etc.
 *************************************************************************/    
 
-
-
-
 #include "cfprng_fips_rand.h"
-
 
 /* 
    args: 
@@ -32,6 +28,6 @@
 
 int cfprng_explicit_seed(unsigned char* buf, int len) {
 
-  ;  
+  return CFPRNG_ERR;
 
 }
