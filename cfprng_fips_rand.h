@@ -31,11 +31,15 @@ extern "C" {
 #include <openssl/err.h>
 #include <openssl/rand.h>
 
+#undef CFPRNG_MAX_RAND_BYTES
 #define CFPRNG_MAX_RAND_BYTES 1024
 
   /* ERROR CODES */
 
+#undef CFPRNG_SUCCESS
 #define CFPRNG_SUCCESS 0x00U
+
+#undef  CFPRNG_ERR
 #define CFPRNG_ERR 0x01U
 
 /*
