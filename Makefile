@@ -37,7 +37,7 @@
 # build the shlibs, programs, java classes and jni shlib
 #
 # 3) If you just wish to compile the statically linked fips program use 
-# target (a) above (requires that you compile / install OpenSSL FIPS module)
+# target (b) above (requires that you compile / install OpenSSL FIPS module)
 #
 # 4) If you just have OpenSSL installed, but have not compiled 
 # the FIPS module, use build target (c) above
@@ -50,7 +50,7 @@
 
 CC=gcc
 
-JAVA_PATH=/usr/lib/jvm/java-8-oracle/bin/
+JAVA_PATH=/Library/Java/JavaVirtualMachines/jdk1.8.0_111.jdk/Contents/Home/bin/
 
 JAVAC=$(JAVA_PATH)javac
 
@@ -62,13 +62,13 @@ JAVA_LIB_PATH="$(LD_LIBRARY_PATH)"
 
 #DEBUG_FLAGS=-DDEBUG_FINGERPRINT_PREMAIN
 
-#JNI_MD_ARCH=darwin
+JNI_MD_ARCH=darwin
 
-JNI_MD_ARCH=linux
+# JNI_MD_ARCH=linux
 
 #JNI_INCLUDES=-I/Library/Java/JavaVirtualMachines/jdk1.8.0_73.jdk/Contents/Home/include/
 
-JNI_INCLUDES=-I/usr/lib/jvm/java-8-oracle/include/
+JNI_INCLUDES=-I/Library/Java/JavaVirtualMachines/jdk1.8.0_111.jdk/Contents/Home/include/
 
 JNI_INCLUDES_MD=$(JNI_INCLUDES)/$(JNI_MD_ARCH)
 
@@ -86,7 +86,7 @@ CFLAGS=$(ARCH_FLAGS) $(INCLUDES) $(JNI_INCLUDES) $(JNI_INCLUDES_MD) $(DEBUG_FLAG
 
 LD_FLAGS=$(ARCH_FLAGS) $(DEBUG_FLAGS) $(LD_VERBOSE)
 
-OPENSSLDIR=/home/user/Downloads/openssl-1.1.0e/myinstall
+OPENSSLDIR=/Users/pivotal/Downloads/openssl-1.1.0e/myinstall
 
 LIBS=-L$(OPENSSLDIR)/lib/ -L. -lcrypto -ldl 
 
@@ -97,6 +97,10 @@ RELOC_FLAGS=-fpic
 INCLUDES=-I$(OPENSSLDIR)/include
 
 LD_LIBRARY_PATH=$(OPENSSLDIR)/lib/:.
+
+SO_EXT=dylib
+
+#SO_EXT=so
 
 ############################################
 # srcs, hdrs, obs and shared objs
@@ -139,13 +143,13 @@ HEADERS=cfprng_fips_rand.h
 # shlib targets, exec targets, toplevel targets
 ##############################################
 
-FIPS_SO=lib$(FIPS_SO_PREFIX).so
+FIPS_SO=lib$(FIPS_SO_PREFIX).$(SO_EXT)
 
-NIST_SO=lib$(NIST_SO_PREFIX).so
+NIST_SO=lib$(NIST_SO_PREFIX).$(SO_EXT)
 
-COMMON_SO=lib$(COMMON_SO_PREFIX).so
+COMMON_SO=lib$(COMMON_SO_PREFIX).$(SO_EXT)
 
-CFPRNG_JNI_SO=libcfprng_rand_jni.so
+CFPRNG_JNI_SO=libcfprng_rand_jni.$(SO_EXT)
 
 FIPS_PROG=$(FIPS_SO_PREFIX)
 
@@ -172,6 +176,7 @@ FIPS_LD=$(OPENSSLDIR)/fips-2.0/bin/fipsld $(LD_FLAGS)
 
 all: $(TARGETS)
 
+set1: $(NIST_PROG)_pic
 
 $(FIPS_SO_PREFIX).o: 
 	$(CC) -c $(CFLAGS) $(RELOC_FLAGS)  $(FIPS_SO_PREFIX).c
@@ -207,14 +212,14 @@ $(NIST_SO_PREFIX).o:
 
 
 $(NIST_SO):  $(NIST_SO_PREFIX).o
-	$(CC) $(SO_FLAGS) $(ARCH_FLAGS) -o $(NIST_SO)  $(NIST_SO_PREFIX).o  $(LIBS)
+	$(CC) $(SO_FLAGS) $(ARCH_FLAGS) -o $(NIST_SO)  -l$(COMMON_SO_PREFIX) $(NIST_SO_PREFIX).o  $(LIBS)
 
 
 $(NIST_PROG): $(COMMON_SO) $(NIST_MAIN_PREFIX).o 
-	$(CC) $(LD_FLAGS) $(NIST_OBJS) $(NIST_MAIN_PREFIX).o -o $(NIST_PROG) -l$(NIST_SO_PREFIX) -l $(COMMON_SO_PREFIX) $(LIBS)
+	$(CC) $(LD_FLAGS) $(NIST_OBJS) $(NIST_MAIN_PREFIX).o -o $(NIST_PROG) -l$(NIST_SO_PREFIX) -l$(COMMON_SO_PREFIX) $(LIBS)
 
 
-$(NIST_PROG)_pic: $(NIST_TARGETS) $(COMMON_SO) $(CFPRNG_JNI_SO)
+$(NIST_PROG)_pic: $(COMMON_SO) $(NIST_TARGETS) $(CFPRNG_JNI_SO)
 
 
 $(CFPRNG_JNI_SO): javah  cfprng_rand_java_wrapper.o
@@ -241,7 +246,7 @@ run4:
 	java -Djava.library.path=$(JAVA_LIB_PATH) CfprngRand
 
 clean:
-	@rm -rf *.o $(TARGETS) $(FIPS_PROG_NO_PIC) *.class
+	@rm -rf *.o $(TARGETS) $(FIPS_PROG_NO_PIC) *.class *.$(SO_EXT)
 
 
 ##############################################

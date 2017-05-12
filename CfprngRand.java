@@ -24,7 +24,6 @@ public class CfprngRand {
     private final static char[] hexArray = "0123456789ABCDEF".toCharArray();
     
     static {
-
 	System.loadLibrary("cfprng_rand_jni");
     }
 
@@ -56,7 +55,7 @@ public class CfprngRand {
 	rand.cfprng_nist_rand(key,keylen);
 	rand.cfprng_fips_tests();
 	printBytesInHex(key);
-	System.out.println("Loaded lib and ran tests");
+
     }
 
 

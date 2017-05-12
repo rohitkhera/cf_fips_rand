@@ -31,3 +31,18 @@ int cfprng_explicit_seed(unsigned char* buf, int len) {
   return CFPRNG_ERR;
 
 }
+
+
+void cfprng_pretty_print(unsigned char* buf, int len) {
+
+#ifdef CFPRNG_LOG_LEVEL_INFO
+  fprintf(stderr,"%s : %d:\n", __FILE__, __LINE__);
+  for(int i = 0 ; i < len ; i++) {
+
+    fprintf(stderr,"%.02X ", buf[i]);
+  }
+  fprintf(stderr,"%s : %d:\n", __FILE__, __LINE__);
+#endif
+}
+
+

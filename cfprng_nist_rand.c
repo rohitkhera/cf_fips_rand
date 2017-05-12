@@ -42,14 +42,22 @@ int cfprng_nist_rand(unsigned char* buf, int len)
     return CFPRNG_ERR;
   }
 
+#ifdef CFPRNG_LOG_LEVEL_INFO
+    cfprng_pretty_print(buf,len);
+#endif
+
   if (!RAND_bytes(buf, len)) {
 #ifdef CFPRNG_LOG_LEVEL_ERR    
     fprintf(stderr, "%s: %d : RAND_bytes() fail\n", __FILE__, __LINE__ );
 #endif
     return CFPRNG_ERR;
   }
-  else 
+  else {
+#ifdef CFPRNG_LOG_LEVEL_INFO
+    cfprng_pretty_print(buf,len);
+#endif
     return CFPRNG_SUCCESS;
+  }
 
 }
 

@@ -62,7 +62,7 @@ Instructions:
    to build the shlibs, programs, java classes and jni shlib
 
 3) If you just wish to compile the statically linked fips program
-   use target (a) above (requires that you compile / install OpenSSL FIPS module)
+   use target (b) above (requires that you compile / install OpenSSL FIPS module)
 
 4) If you just have OpenSSL installed, but have not compiled the 
    FIPS module, use build target (c) above

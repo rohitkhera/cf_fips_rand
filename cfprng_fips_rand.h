@@ -126,6 +126,14 @@ static char fips_label[] = "@(#)FIPS approved RAND";
 
   int cfprng_fips_rand(unsigned char* buf, int len);
 
+  /*    
+    args: (1) unsigned char* - buf of max len CFPRNG_MAX_RAND_BYTES
+    (2) int - length of buffer
+   Return val : none
+
+  */
+  void cfprng_pretty_print(unsigned char* buf, int len);
+
 #ifdef  __cplusplus
 }
 #endif
