@@ -38,7 +38,7 @@ gcc -v
 Apple LLVM version 8.1.0 (clang-802.0.42)
 Target: x86_64-apple-darwin16.5.0
 Thread model: posix
-
+Also tested with gcc version 4.8.2 (Ubuntu 4.8.2-19ubuntu1) 
 
 Owing to limitations in the underlying OpenSSL libraries, this code is not thread safe
 
@@ -85,3 +85,7 @@ run3:
 
 run4:
 	java -Djava.library.path=$(JAVA_LIB_PATH) CfprngRand
+
+java version info 
+Java(TM) SE Runtime Environment (build 1.8.0_101-b13)
+Java HotSpot(TM) 64-Bit Server VM (build 25.101-b13, mixed mode)

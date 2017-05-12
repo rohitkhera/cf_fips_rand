@@ -12,6 +12,7 @@
 # Apple LLVM version 8.1.0 (clang-802.0.42)
 # Target: x86_64-apple-darwin16.5.0
 # Thread model: posix
+# Also tested with gcc version 4.8.2 (Ubuntu 4.8.2-19ubuntu1) 
 #
 # If you do not have an openssl FIPS module compiled
 # then comment out the Variable FIPS_TARGETS
@@ -42,6 +43,9 @@
 # 4) If you just have OpenSSL installed, but have not compiled 
 # the FIPS module, use build target (c) above
 #
+# java version info 
+# Java(TM) SE Runtime Environment (build 1.8.0_101-b13)
+# Java HotSpot(TM) 64-Bit Server VM (build 25.101-b13, mixed mode)
 ###################################################
 
 ###################################################
