@@ -52,8 +52,10 @@ JNIEXPORT jint JNICALL Java_CfprngRand_cfprng_1nist_1rand
  */
 JNIEXPORT jint JNICALL Java_CfprngRand_cfprng_1fips_1tests
 (JNIEnv * env, jobject obj) {
-  cfprng_fips_tests();
-  return (jint) CFPRNG_ERR;
+  if(cfprng_fips_tests())
+    return (jint) CFPRNG_ERR;
+  else
+    return (jint) CFPRNG_SUCCESS;
 }
 
   
