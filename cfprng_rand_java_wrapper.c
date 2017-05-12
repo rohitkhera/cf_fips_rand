@@ -22,8 +22,12 @@ JNIEXPORT jint JNICALL Java_CfprngRand_cfprng_1fips_1rand
 JNIEXPORT jint JNICALL Java_CfprngRand_cfprng_1nist_1rand
 (JNIEnv * env, jobject obj, jbyteArray buf, jint len) {
 
-  jbyte* bufferPtr = (*env)->GetByteArrayElements(env, buf, NULL);
-  jsize lengthOfArray = (*env)->GetArrayLength(env, buf);
+  jbyte* bufferPtr = NULL;
+  bufferPtr = (*env)->GetByteArrayElements(env, buf, NULL);
+  if(bufferPtr == NULL) return (jint) CFPRNG_ERR;
+
+  jsize lengthOfArray = -1;
+  lengthOfArray = (*env)->GetArrayLength(env, buf);
   
   if(lengthOfArray != len) return (jint) CFPRNG_ERR;
   if(cfprng_nist_rand((unsigned char*) bufferPtr, (int) len)) {
