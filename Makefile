@@ -50,7 +50,9 @@
 
 CC=gcc
 
-JAVA_PATH=/Library/Java/JavaVirtualMachines/jdk1.8.0_111.jdk/Contents/Home/bin/
+#JAVA_PATH=/Library/Java/JavaVirtualMachines/jdk1.8.0_111.jdk/Contents/Home/bin/
+
+JAVA_PATH=/usr/lib/jvm/java-8-oracle/bin/
 
 JAVAC=$(JAVA_PATH)javac
 
@@ -62,13 +64,15 @@ JAVA_LIB_PATH="$(LD_LIBRARY_PATH)"
 
 #DEBUG_FLAGS=-DDEBUG_FINGERPRINT_PREMAIN
 
-JNI_MD_ARCH=darwin
+#JNI_MD_ARCH=darwin
 
-# JNI_MD_ARCH=linux
+JNI_MD_ARCH=linux
+
+JNI_INCLUDES=-I/usr/lib/jvm/java-8-oracle/include/
 
 #JNI_INCLUDES=-I/Library/Java/JavaVirtualMachines/jdk1.8.0_73.jdk/Contents/Home/include/
 
-JNI_INCLUDES=-I/Library/Java/JavaVirtualMachines/jdk1.8.0_111.jdk/Contents/Home/include/
+#JNI_INCLUDES=-I/Library/Java/JavaVirtualMachines/jdk1.8.0_111.jdk/Contents/Home/include/
 
 JNI_INCLUDES_MD=$(JNI_INCLUDES)/$(JNI_MD_ARCH)
 
@@ -86,7 +90,7 @@ CFLAGS=$(ARCH_FLAGS) $(INCLUDES) $(JNI_INCLUDES) $(JNI_INCLUDES_MD) $(DEBUG_FLAG
 
 LD_FLAGS=$(ARCH_FLAGS) $(DEBUG_FLAGS) $(LD_VERBOSE)
 
-OPENSSLDIR=/Users/pivotal/Downloads/openssl-1.1.0e/myinstall
+OPENSSLDIR=/home/user/Downloads/openssl-1.1.0e/myinstall
 
 LIBS=-L$(OPENSSLDIR)/lib/ -L. -lcrypto -ldl 
 
@@ -98,9 +102,9 @@ INCLUDES=-I$(OPENSSLDIR)/include
 
 LD_LIBRARY_PATH=$(OPENSSLDIR)/lib/:.
 
-SO_EXT=dylib
+#SO_EXT=dylib
 
-#SO_EXT=so
+SO_EXT=so
 
 ############################################
 # srcs, hdrs, obs and shared objs
@@ -176,8 +180,6 @@ FIPS_LD=$(OPENSSLDIR)/fips-2.0/bin/fipsld $(LD_FLAGS)
 
 all: $(TARGETS)
 
-set1: $(NIST_PROG)_pic
-
 $(FIPS_SO_PREFIX).o: 
 	$(CC) -c $(CFLAGS) $(RELOC_FLAGS)  $(FIPS_SO_PREFIX).c
 
@@ -220,6 +222,9 @@ $(NIST_PROG): $(COMMON_SO) $(NIST_MAIN_PREFIX).o
 
 
 $(NIST_PROG)_pic: $(COMMON_SO) $(NIST_TARGETS) $(CFPRNG_JNI_SO)
+
+
+set1: $(NIST_PROG)_pic
 
 
 $(CFPRNG_JNI_SO): javah  cfprng_rand_java_wrapper.o
