@@ -11,6 +11,8 @@ extern "C" {
 #define CfprngRand_CFPRNG_SUCCESS 0L
 #undef CfprngRand_CFPRNG_ERR
 #define CfprngRand_CFPRNG_ERR 1L
+#undef CfprngRand_CFPRNG_MAX_RAND_BYTES
+#define CfprngRand_CFPRNG_MAX_RAND_BYTES 1024L
 /*
  * Class:     CfprngRand
  * Method:    cfprng_nist_rand

@@ -18,6 +18,7 @@ public class CfprngRand {
 
     public static final int CFPRNG_SUCCESS = 0x00;
     public static final int CFPRNG_ERR = 0x01;
+    public static final int CFPRNG_MAX_RAND_BYTES = 1024;
     //public native int cfprng_fips_rand(byte[] buf, int len);
     public native int cfprng_nist_rand(byte[] buf, int len);
     public native int cfprng_fips_tests();
