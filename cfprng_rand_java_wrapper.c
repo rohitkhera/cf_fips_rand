@@ -23,14 +23,14 @@ JNIEXPORT jint JNICALL Java_CfprngRand_cfprng_1nist_1rand
 (JNIEnv * env, jobject obj, jbyteArray buf, jint len) {
 
   jbyte* bufferPtr = (*env)->GetByteArrayElements(env, buf, NULL);
-
   jsize lengthOfArray = (*env)->GetArrayLength(env, buf);
-
   
-  
-  if(lengthOfArray != len) return CFPRNG_ERR;
+  if(lengthOfArray != len) return (jint) CFPRNG_ERR;
   if(cfprng_nist_rand((unsigned char*) bufferPtr, (int) len)) {
+#ifdef CFPRNG_LOG_LEVEL_ERR
     fprintf(stderr, "%s : ERROR\n", __FILE__);
+#endif
+    (*env)->ReleaseByteArrayElements(env, buf, bufferPtr, 0);
     return (jint)CFPRNG_ERR;
   }
 
@@ -43,7 +43,7 @@ JNIEXPORT jint JNICALL Java_CfprngRand_cfprng_1nist_1rand
 
 /*
  * Class:     CfprngRand
- * Method:    cfprng_fips_tests
+ * Method:    cfprng_fips_tests (statistical tests)
  * Signature: ()I
  */
 JNIEXPORT jint JNICALL Java_CfprngRand_cfprng_1fips_1tests
