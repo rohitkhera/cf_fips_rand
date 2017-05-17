@@ -233,26 +233,29 @@ set1: $(NIST_PROG)_pic
 
 $(CFPRNG_JNI_SO): javah  cfprng_rand_java_wrapper.o
 	$(CC) $(SO_FLAGS) $(ARCH_FLAGS) -o $(CFPRNG_JNI_SO)  cfprng_rand_java_wrapper.o \
-	$(LIBS) $(NIST_SO) $(COMMON_SO)
+	$(LIBS) -l$(COMMON_SO_PREFIX) -l$(NIST_SO_PREFIX)
 
 
 javah: $(JAVA_CLASSES)
 	$(JAVAH) -jni CfprngRand
 
 run1:
-	export LD_LIBRARY_PATH=$(LD_LIBRARY_PATH);./cfprng_fips_rand
-	export LD_LIBRARY_PATH=$(LD_LIBRARY_PATH);./cfprng_nist_rand
+	export LD_LIBRARY_PATH=$(LD_LIBRARY_PATH); ./cfprng_fips_rand
+	export LD_LIBRARY_PATH=$(LD_LIBRARY_PATH); ./cfprng_nist_rand
 
 
 run2:
-	export LD_LIBRARY_PATH=$(LD_LIBRARY_PATH);./cfprng_fips_rand_static
+	export LD_LIBRARY_PATH=$(LD_LIBRARY_PATH);\
+	./cfprng_fips_rand_static
 
 run3:
-	export LD_LIBRARY_PATH=$(LD_LIBRARY_PATH);./cfprng_nist_rand
+	export LD_LIBRARY_PATH=$(LD_LIBRARY_PATH);\
+	./cfprng_nist_rand
 
 
 run4:
-	java -Djava.library.path=$(JAVA_LIB_PATH) CfprngRand
+	export LD_LIBRARY_PATH=$(LD_LIBRARY_PATH);\
+	 $(JAVA_PATH)/java -Djava.library.path=$(JAVA_LIB_PATH) CfprngRand
 
 clean:
 	@rm -rf *.o $(TARGETS) $(FIPS_PROG_NO_PIC) *.class *.$(SO_EXT)
