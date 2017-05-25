@@ -89,3 +89,15 @@ run4:
 java version info 
 Java(TM) SE Runtime Environment (build 1.8.0_101-b13)
 Java HotSpot(TM) 64-Bit Server VM (build 25.101-b13, mixed mode)
+
+OpenSSL install:
+The following are instructions to install and build openssl and the openssl fips module. The libraries and fips cannister objects are intalled in the default location /usr/local/ssl.
+1) Download openssl-fips-2.0.16
+./config
+make
+sudo make install
+1) Download openssl-1.0.2l
+./config fips
+make depend
+make
+sudo make install
