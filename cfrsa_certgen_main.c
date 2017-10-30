@@ -8,7 +8,7 @@ int main(int argc, char ** argv)
     
     EVP_PKEY * pkey = generate_key();
     if(!pkey)
-      return CFRSA_ERR;
+      return 1;
     
     /* Generate the certificate. */
     printf("Generating x509 certificate...\n");
@@ -17,7 +17,7 @@ int main(int argc, char ** argv)
     if(!x509)
     {
         EVP_PKEY_free(pkey);
-        return CFRSA_ERR;
+        return 1;
     }
     
     /* Write the private key and certificate out to disk. */
@@ -30,8 +30,8 @@ int main(int argc, char ** argv)
     if(ret)
     {
       printf("Success!\n");
-        return CFRSA_SUCCESS;
+      return 0;
     }
     else
-        return CFRSA_ERR;
+      return 1;
 }
