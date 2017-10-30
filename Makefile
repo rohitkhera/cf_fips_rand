@@ -255,7 +255,7 @@ $(CFRSA_CERTGEN_SO): $(CFRSA_OBJS)
 	$(CC) $(SO_FLAGS) $(ARCH_FLAGS) -o $(CFRSA_CERTGEN_SO)  $(CFRSA_OBJS)  $(LIBS)
 
 
-$(CFRSA_CERTGEN_PROG): $(CFRSA_CERTGEN_MAIN_PREFIX).o
+$(CFRSA_CERTGEN_PROG)_pic: $(CFRSA_CERTGEN_MAIN_PREFIX).o
 	$(CC) $(LD_FLAGS) $(CFRSA_CERTGEN_MAIN_PREFIX).o -o $(CFRSA_CERTGEN_PROG) -l$(CFRSA_CERTGEN_PREFIX) $(LIBS)
 
 
@@ -284,7 +284,7 @@ $(NIST_PROG)_pic: $(COMMON_SO) $(NIST_TARGETS) $(CFPRNG_JNI_SO)
 # cfprng_nist_rand_pic
 set1: $(NIST_PROG)_pic
 
-set2: $(CFRSA_CERTGEN_SO) $(CFRSA_CERTGEN_PROG)
+set2: $(CFRSA_CERTGEN_SO) $(CFRSA_CERTGEN_PROG)_pic
 
 $(CFPRNG_JNI_SO): javah  cfprng_rand_java_wrapper.o
 	$(CC) $(SO_FLAGS) $(ARCH_FLAGS) -o $(CFPRNG_JNI_SO)  cfprng_rand_java_wrapper.o \
@@ -317,7 +317,7 @@ run5:
 
 
 clean:
-	@rm -rf *.o $(TARGETS) $(FIPS_PROG_NO_PIC) *.class *.$(SO_EXT)
+	@rm -rf *.o $(TARGETS) $(FIPS_PROG_NO_PIC) $(NIST_PROG) $(NIST_PROG)_pic $(CFRSA_CERTGEN_PROG) *.class *.$(SO_EXT) *.pem
 
 
 ##############################################
