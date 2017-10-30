@@ -24,6 +24,7 @@
    1) unsigned char* - unsigned char buffer to hold the seed
    2) int - seed length (this should be equal to the length 
       of the buffer
+      Currently not implemented
 */
 
 int cfprng_explicit_seed(unsigned char* buf, int len) {
@@ -42,7 +43,7 @@ void cfprng_pretty_print(unsigned char* buf, int len) {
 
     fprintf(stderr,"%.02X ", buf[i]);
   }
-  fprintf(stderr,"%s : %d:\n", __FILE__, __LINE__);
+
 #endif
 }
 
