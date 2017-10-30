@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
     else break; 
   }
   
-  if(cfprng_nist_rand(buf, CFPRNG_MAX_RAND_BYTES)) {
+  if(cfprng_nist_rand(buf, CFPRNG_MAX_RAND_BYTES)==CFPRNG_ERR) {
 #ifdef CFPRNG_LOG_LEVEL_ERR    
     fprintf(stderr, "%s : ln %d : cfprng_nist_rand_fail()\n", __FILE__, __LINE__);
 #endif
@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
     exit(retVal);
   }
 
-  if(cfprng_fips_tests()) {
+  if(cfprng_fips_tests()==CFPRNG_ERR) {
 #ifdef CFPRNG_LOG_LEVEL_ERR    
     fprintf(stderr, "%s : ln %d : Failed simple FIPS statistical tests\n", __FILE__, __LINE__);
     retVal=CFPRNG_ERR;
