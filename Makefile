@@ -194,7 +194,7 @@ CFPRNG_JNI_SO=libcfprng_rand_jni.$(SO_EXT)
 
 CFRSA_CERTGEN_SO=lib$(CFRSA_CERTGEN_PREFIX).$(SO_EXT)
 
-CFRSA_CERGEN_JNI_SO=libcfrsa_certgen_jni.$(SO_EXT)
+CFRSA_CERTGEN_JNI_SO=libcfrsa_certgen_jni.$(SO_EXT)
 
 FIPS_PROG=$(FIPS_SO_PREFIX)
 
@@ -286,13 +286,25 @@ set1: $(NIST_PROG)_pic
 
 set2: $(CFRSA_CERTGEN_SO) $(CFRSA_CERTGEN_PROG)_pic
 
-$(CFPRNG_JNI_SO): javah  cfprng_rand_java_wrapper.o
+$(CFPRNG_JNI_SO): javah_cfprng  cfprng_rand_java_wrapper.o
 	$(CC) $(SO_FLAGS) $(ARCH_FLAGS) -o $(CFPRNG_JNI_SO)  cfprng_rand_java_wrapper.o \
 	$(LIBS) -l$(COMMON_SO_PREFIX) -l$(NIST_SO_PREFIX)
 
 
-javah: $(JAVA_CLASSES)
+javah_cfprng: $(JAVA_CLASSES)
 	$(JAVAH) -jni CfprngRand
+
+
+$(CFRSA_CERTGEN_JNI_SO): javah_cfrsa  cfrsa_certgen_java_wrapper.o
+	$(CC) $(SO_FLAGS) $(ARCH_FLAGS) -o $(CFRSA_CERTGEN_JNI_SO)  cfrsa_certgen_java_wrapper.o \
+	$(LIBS) 
+
+
+javah_cfrsa: $(JAVA_CLASSES)
+	$(JAVAH) -jni CfprngRand
+
+
+
 
 run1:
 	export LD_LIBRARY_PATH=$(LD_LIBRARY_PATH); ./cfprng_fips_rand
