@@ -25,7 +25,7 @@ int cfprng_nist_rand(unsigned char* buf, int len)
 { 
 
   if(len > CFPRNG_MAX_RAND_BYTES) {
-#ifdef CFPRNG_LOG_LEVEL_ERR
+#ifdef CFOPENSSL_LOG_LEVEL_ERR
     fprintf(stderr, "%s: %d : length exceeds %d", __FILE__, __LINE__, CFPRNG_MAX_RAND_BYTES );
 #endif
     return CFPRNG_ERR;
@@ -36,24 +36,24 @@ int cfprng_nist_rand(unsigned char* buf, int len)
 
   int rc = RAND_load_file("/dev/urandom", 32);
   if(rc != 32) {
-#ifdef CFPRNG_LOG_LEVEL_ERR
+#ifdef CFOPENSSL_LOG_LEVEL_ERR
     fprintf(stderr, "%s: %d :could not open /dev/urandom\n", __FILE__, __LINE__ );
 #endif
     return CFPRNG_ERR;
   }
 
-#ifdef CFPRNG_LOG_LEVEL_INFO
+#ifdef CFOPENSSL_LOG_LEVEL_INFO
     cfprng_pretty_print(buf,len);
 #endif
 
   if (!RAND_bytes(buf, len)) {
-#ifdef CFPRNG_LOG_LEVEL_ERR    
+#ifdef CFOPENSSL_LOG_LEVEL_ERR    
     fprintf(stderr, "%s: %d : RAND_bytes() fail\n", __FILE__, __LINE__ );
 #endif
     return CFPRNG_ERR;
   }
   else {
-#ifdef CFPRNG_LOG_LEVEL_INFO
+#ifdef CFOPENSSL_LOG_LEVEL_INFO
     cfprng_pretty_print(buf,len);
 #endif
     return CFPRNG_SUCCESS;

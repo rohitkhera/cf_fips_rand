@@ -31,7 +31,7 @@ JNIEXPORT jint JNICALL Java_CfprngRand_cfprng_1nist_1rand
   
   if(lengthOfArray != len) return (jint) CFPRNG_ERR;
   if(cfprng_nist_rand((unsigned char*) bufferPtr, (int) len)) {
-#ifdef CFPRNG_LOG_LEVEL_ERR
+#ifdef CFOPENSSL_LOG_LEVEL_ERR
     fprintf(stderr, "%s : ERROR\n", __FILE__);
 #endif
     (*env)->ReleaseByteArrayElements(env, buf, bufferPtr, 0);

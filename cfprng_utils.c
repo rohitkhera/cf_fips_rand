@@ -36,7 +36,7 @@ int cfprng_explicit_seed(unsigned char* buf, int len) {
 
 void cfprng_pretty_print(unsigned char* buf, int len) {
 
-#ifdef CFPRNG_LOG_LEVEL_INFO
+#ifdef CFOPENSSL_LOG_LEVEL_INFO
   int i = 0;
   fprintf(stderr,"%s : %d:\n", __FILE__, __LINE__);
   for(i = 0 ; i < len ; i++) {
