@@ -33,10 +33,10 @@ extern "C" {
   /* ERROR CODES */
 
 #undef CFRSA_SUCCESS
-#define CFRSA_SUCCESS 0x00U
+#define CFRSA_SUCCESS 0x01U
 
 #undef  CFRSA_ERR
-#define CFRSA_ERR 0x01U
+#define CFRSA_ERR 0x00U
 
   /*
 static char fips_label[] = "@(#)FIPS approved RAND"; 
