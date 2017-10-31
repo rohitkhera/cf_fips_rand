@@ -28,22 +28,20 @@ int main(int argc, char *argv[])
   }
   
   if(cfprng_fips_rand(buf, CFPRNG_MAX_RAND_BYTES)==CFPRNG_ERR) {
-#ifdef CFOPENSSL_LOG_LEVEL_ERR    
-    fprintf(stderr, "%s : ln %d : cfprng_fips_rand_fail()\n", __FILE__, __LINE__);
-#endif
+    cfopenssl_log_err(__FILE__,__LINE,"cfprng_fips_rand_fail()");
     retVal=CFPRNG_ERR;
     exit(retVal);
   }
 
   if(cfprng_fips_tests()==CFPRNG_ERR) {
-#ifdef CFOPENSSL_LOG_LEVEL_ERR    
-    fprintf(stderr, "%s : ln %d : Failed simple FIPS statistical tests\n", __FILE__, __LINE__);
+
+    cfopenssl_log_err(__FILE__,__LINE__"Failed simple FIPS statistical tests");
     retVal=CFPRNG_ERR;
   }
-#endif
+
   else
-#ifdef CFOPENSSL_LOG_LEVEL_INFO
-    fprintf(stderr, "%s : ln %d : Passed simple FIPS statistical tests\n", __FILE__, __LINE__);
+
+    cfopenssl_log_info(__FILE__,__LINE__,"Passed simple FIPS statistical tests");
 #endif
 
     exit(retVal);

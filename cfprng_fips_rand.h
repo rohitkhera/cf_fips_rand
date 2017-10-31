@@ -138,6 +138,11 @@ static char fips_label[] = "@(#)FIPS approved RAND";
   */
   void cfprng_pretty_print(unsigned char* buf, int len);
 
+  void cfopenssl_log_err(char* filename, int linenum, char *msg);
+
+  void cfopenssl_log_info(char* filename, int linenum, char *msg);  
+
+  
 #ifdef  __cplusplus
 }
 #endif

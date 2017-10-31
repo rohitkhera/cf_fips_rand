@@ -27,17 +27,13 @@ int cfprng_fips_rand(unsigned char* buf, int len)
   const RAND_METHOD* rm = RAND_get_rand_method();
 
   if(len > CFPRNG_MAX_RAND_BYTES) {
-#ifdef CFOPENSSL_LOG_LEVEL_ERR
-    fprintf(stderr, "%s: %d : length exceeds %d", __FILE__, __LINE__, CFPRNG_MAX_RAND_BYTES );
-#endif
+    cfopenssl_log_err(__FILE__,__LINE__,"length exceeds CFPRNG_MAX_RAND_BYTES");
     return CFPRNG_ERR;
   }
 
   /* Enter FIPS mode */
   if(FIPS_mode_set(1)) { 
-#ifdef CFOPENSSL_LOG_LEVEL_INFO
-    fprintf(stderr,"FIPS mode enabled\n"); 
-#endif
+    cfopenssl_log_info(__FILE__,__LINE__,"fips mode enabled");
   } 
   else { 
 #ifdef CFOPENSSL_LOG_LEVEL_INFO
@@ -52,16 +48,12 @@ int cfprng_fips_rand(unsigned char* buf, int len)
 
   int rc = RAND_load_file("/dev/urandom", 32);
   if(rc != 32) {
-#ifdef CFOPENSSL_LOG_LEVEL_ERR
-    fprintf(stderr, "%s: %d :could not open /dev/urandom\n", __FILE__, __LINE__ );
-#endif
+    cfopenssl_log_err(__FILE__,__LINE__,"could not open /dev/urandom");    
     return CFPRNG_ERR;
   }
 
   if (!RAND_bytes(buf, len)) {
-#ifdef CFOPENSSL_LOG_LEVEL_ERR    
-    fprintf(stderr, "%s: %d : RAND_bytes() fail\n", __FILE__, __LINE__ );
-#endif
+    cfopenssl_log_err(__FILE__,__LINE__,"RAND_bytes() fail");    
     return CFPRNG_ERR;
   }
   else 

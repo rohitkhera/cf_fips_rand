@@ -1,6 +1,10 @@
 ###################################################
-# R Khera 5/7/17
+# R Khera Oct 31 2017
 # Compile cfprng_nist_rand.c and cfprng_fips_rand.c into .so's
+# also added new targets for RSA cert gen and AES GCM which will
+# also be compiled into .so.
+# FIPS module related targets are deprecated
+#
 # -m32 CFLAGS needed since openssl libs 
 # were compied in 32 bit mode and without 
 # this flag ld.so looks for x86_64 symbols .
@@ -20,23 +24,27 @@
 #
 # Toplevel commands are as follows
 #
-# a) make - **Only use this target if you have compiled the OpenSSL
+# a) ***deprecated**
+#    make - **Only use this target if you have compiled the OpenSSL
 #    FIPS module**.
 #    Builds shlibs, cfprng_fips_rand & cfprng_nist_rand 
 #    programs, java jni wrapper classes and jni .so
 #
-# b) make cfprng_fips_rand_static - **Only use if you hae compiled
+# b) **deprecated**
+#    make cfprng_fips_rand_static - **Only use if you hae compiled
 #    the OpenSSL FIPS module**.
 #    Builds cfprng_fips_rand_static
 #    statically linked to cfprng_fips_rand functionality
 #
-# c) make cfprng_nist_rand_pic - builds cfprng_nist_rand
-#    and associated shlib, java jni wrapper classes and jni .so
+# c) make set1
+#    cfprng_nist_rand_pic - builds cfprng_nist_rand
+#    and associated .so, java jni wrapper classes and jni .so
+#    (Does not leverate the openSSL FIPS module)
 #
-# d) added support for rsa cert gen. In order to build this subset
-#    of functionality use the following command (this is not done
-#    with fips mode on):
-#    > make cfrsa_certgen
+# d) make set2
+#    added support for rsa cert gen. and associated .so,
+#    java jni wrapper classes and jni .so
+#    (Does not leverate the openSSL FIPS module)
 #
 # Instructions:
 #
@@ -62,7 +70,7 @@
 # ./config
 # make
 # sudo make install
-# 1) Download openssl-1.0.2l
+# 1) Download openssl-1.0.2
 # ./config fips
 # make depend
 # make
@@ -210,7 +218,11 @@ FIPS_TARGETS=$(FIPS_SO) $(FIPS_PROG)
 
 NIST_TARGETS=$(NIST_SO) $(NIST_PROG)
 
+#deprecated since we're no longer as concerned with FIPS module
+# use TARGETS2 def instead
 TARGETS=$(FIPS_TARGETS) $(NIST_TARGETS) $(COMMON_SO) $(JNI_TARGETS)
+
+TARGETS2 = set1 set2
 
 JNI_TARGETS=$(CFPRNG_JNI_SO)
 
@@ -223,7 +235,7 @@ FIPS_LD=$(OPENSSLDIR)/fips-2.0/bin/fipsld $(LD_FLAGS)
 
 
 
-all: $(TARGETS)
+all: $(TARGETS2)
 
 $(FIPS_SO_PREFIX).o: 
 	$(CC) -c $(CFLAGS) $(RELOC_FLAGS)  $(FIPS_SO_PREFIX).c
@@ -251,12 +263,12 @@ $(FIPS_SO):  $(FIPS_SO_PREFIX).o
 	$(CC) $(SO_FLAGS) $(ARCH_FLAGS) -o $(FIPS_SO)  $(FIPS_SO_PREFIX).o  $(LIBS)
 
 
-$(CFRSA_CERTGEN_SO): $(CFRSA_OBJS)
-	$(CC) $(SO_FLAGS) $(ARCH_FLAGS) -o $(CFRSA_CERTGEN_SO)  $(CFRSA_OBJS)  $(LIBS)
+$(CFRSA_CERTGEN_SO): $(COMMON_SO) $(CFRSA_OBJS)
+	$(CC) $(SO_FLAGS) $(ARCH_FLAGS) -o $(CFRSA_CERTGEN_SO)  $(CFRSA_OBJS)  -l$(COMMON_SO_PREFIX) $(LIBS)
 
 
-$(CFRSA_CERTGEN_PROG)_pic: $(CFRSA_CERTGEN_MAIN_PREFIX).o
-	$(CC) $(LD_FLAGS) $(CFRSA_CERTGEN_MAIN_PREFIX).o -o $(CFRSA_CERTGEN_PROG) -l$(CFRSA_CERTGEN_PREFIX) $(LIBS)
+$(CFRSA_CERTGEN_PROG)_pic: $(CFRSA_CERTGEN_SO) $(CFRSA_CERTGEN_MAIN_PREFIX).o
+	$(CC) $(LD_FLAGS) $(CFRSA_CERTGEN_MAIN_PREFIX).o -o $(CFRSA_CERTGEN_PROG) -l$(CFRSA_CERTGEN_PREFIX) -l$(COMMON_SO_PREFIX) $(LIBS)
 
 
 $(FIPS_PROG): $(COMMON_SO) $(FIPS_MAIN_PREFIX).o

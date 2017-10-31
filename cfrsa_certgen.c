@@ -8,6 +8,7 @@
 *   be placed in the caller's LD_LIBRARY_PATH (see 
 *   Makefile for compiler versions and and ld / c flags etc
 ********************************************************/   
+#include "cfprng_fips_rand.h"
 #include "cfrsa_core.h"
 
 /* Gen 4k-bit RSA key. */
@@ -17,9 +18,7 @@ EVP_PKEY * generate_key()
   EVP_PKEY * pkey = EVP_PKEY_new();
   if(!pkey)
     {
-#ifdef CFOPENSSL_LOG_LEVEL_ERR
-      fprintf(stderr, "%s: %d : Unable to allocate EVP key struct\n", __FILE__, __LINE__);
-#endif
+      cfopenssl_log_err(__FILE__,__LINE__,"Unable to allocate EVP key struct");
       return NULL;
     }
     
@@ -27,9 +26,7 @@ EVP_PKEY * generate_key()
   RSA * rsa = RSA_generate_key(4096, RSA_F4, NULL, NULL);
   if(!EVP_PKEY_assign_RSA(pkey, rsa))
     {
-#ifdef CFOPENSSL_LOG_LEVEL_ERR
-      fprintf(stderr, "%s: %d : Unable to generate 4096-bit RSA key\n", __FILE__, __LINE__);
-#endif
+      cfopenssl_log_err(__FILE__,__LINE__,"Unable to 4096 bit RSA key");      
       EVP_PKEY_free(pkey);
       return NULL;
     }
@@ -44,9 +41,7 @@ X509 * generate_x509(EVP_PKEY * pkey)
   X509 * x509 = X509_new();
   if(!x509)
     {
-#ifdef CFOPENSSL_LOG_LEVEL_ERR
-      fprintf(stderr, "%s: %d : Unable to allocate x509 struct\n", __FILE__, __LINE__);
-#endif      
+      cfopenssl_log_err(__FILE__,__LINE__,"Unable to allocate x509 struct");
       return NULL;
     }
     
@@ -90,11 +85,9 @@ int write_to_disk(EVP_PKEY * privkey, X509 * x509)
     FILE * privkey_file = fopen("key.pem", "wb");
     if(!privkey_file)
       {
-#ifdef CFOPENSSL_LOG_LEVEL_ERR
-	fprintf(stderr, "%s: %d : Can't open private key file for write\n", __FILE__, __LINE__);
-#endif      
+	cfopenssl_log_err(__FILE__,__LINE__,"Can't open private key file for write");	
 	return CFRSA_ERR;
-
+	
       }
     
     /* Write priv key. */
@@ -103,9 +96,7 @@ int write_to_disk(EVP_PKEY * privkey, X509 * x509)
     
     if(!retVal)
       {
-#ifdef CFOPENSSL_LOG_LEVEL_ERR
-	fprintf(stderr, "%s: %d : Can't write private key to file\n", __FILE__, __LINE__);
-#endif      
+	cfopenssl_log_err(__FILE__,__LINE__,"Can't write private key to file");		
         return CFRSA_ERR;
       }
     
@@ -113,9 +104,7 @@ int write_to_disk(EVP_PKEY * privkey, X509 * x509)
     FILE * x509_file = fopen("cert.pem", "wb");
     if(!x509_file)
       {
-#ifdef CFOPENSSL_LOG_LEVEL_ERR
-	fprintf(stderr, "%s: %d : Can't open cert key file for write\n", __FILE__, __LINE__);
-#endif      	
+	cfopenssl_log_err(__FILE__,__LINE__,"Can't open cery key file for write");			
         return CFRSA_ERR;
       }
     
@@ -125,9 +114,7 @@ int write_to_disk(EVP_PKEY * privkey, X509 * x509)
     
     if(!retVal)
       {
-#ifdef CFOPENSSL_LOG_LEVEL_ERR
-	fprintf(stderr, "%s: %d : Can't write cert to disk\n", __FILE__, __LINE__);
-#endif      	
+	cfopenssl_log_err(__FILE__,__LINE__,"Can't write cert to disk");	
         return CFRSA_ERR;	
       }
     

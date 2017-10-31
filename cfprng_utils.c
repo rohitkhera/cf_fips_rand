@@ -34,17 +34,29 @@ int cfprng_explicit_seed(unsigned char* buf, int len) {
 }
 
 
+void cfopenssl_log_info(char* filename, int linenum, char *msg) {
+#ifdef CFOPENSSL_LOG_LEVEL_INFO
+  fprintf(stderr,"%s : %d: %s\n", filename, linenum, msg);    
+#endif
+}
+
+void cfopenssl_log_err(char* filename, int linenum, char *msg) {
+#ifdef CFOPENSSL_LOG_LEVEL_ERR
+  fprintf(stderr,"%s : %d: %s\n", filename, linenum, msg);    
+#endif
+}
+
+
 void cfprng_pretty_print(unsigned char* buf, int len) {
 
-#ifdef CFOPENSSL_LOG_LEVEL_INFO
+
   int i = 0;
-  fprintf(stderr,"%s : %d:\n", __FILE__, __LINE__);
+  cfopenssl_log_info( __FILE__, __LINE__, "");
   for(i = 0 ; i < len ; i++) {
 
     fprintf(stderr,"%.02X ", buf[i]);
   }
 
-#endif
 }
 
 

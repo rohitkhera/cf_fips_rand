@@ -1,3 +1,4 @@
+#include "cfprng_fips_rand.h"
 #include "cfrsa_core.h"
 
 
@@ -11,8 +12,7 @@ int main(int argc, char ** argv)
       return 1;
     
     /* Generate the certificate. */
-    printf("Generating x509 certificate...\n");
-    
+    cfopenssl_log_info(__FILE__,__LINE__,"Generating x509 certificate...");
     X509 * x509 = generate_x509(pkey);
     if(!x509)
     {
@@ -21,7 +21,7 @@ int main(int argc, char ** argv)
     }
     
     /* Write the private key and certificate out to disk. */
-    printf("Writing key and certificate to disk...\n");
+    cfopenssl_log_info(__FILE__,__LINE__,"Writing key and certificate to disk...");    
     
     int ret = write_to_disk(pkey, x509);
     EVP_PKEY_free(pkey);
@@ -29,7 +29,7 @@ int main(int argc, char ** argv)
     
     if(ret)
     {
-      printf("Success!\n");
+          cfopenssl_log_info(__FILE__,__LINE__,"Success");    
       return 0;
     }
     else
