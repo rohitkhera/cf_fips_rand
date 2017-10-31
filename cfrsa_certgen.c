@@ -11,6 +11,38 @@
 #include "cfprng_fips_rand.h"
 #include "cfrsa_core.h"
 
+
+char *X509_to_PEM(X509 *cert) {
+
+    BIO *bio = NULL;
+    char *pem = NULL;
+
+    if (NULL == cert) {
+        return NULL;
+    }
+
+    bio = BIO_new(BIO_s_mem());
+    if (NULL == bio) {
+        return NULL;
+    }
+
+    if (0 == PEM_write_bio_X509(bio, cert)) {
+        BIO_free(bio);
+        return NULL;
+    }
+
+    pem = (char *) malloc(bio->num_write + 1);
+    if (NULL == pem) {
+        BIO_free(bio);
+        return NULL;    
+    }
+
+    memset(pem, 0, bio->num_write + 1);
+    BIO_read(bio, pem, bio->num_write);
+    BIO_free(bio);
+    return pem;
+}
+
 /* Gen 4k-bit RSA key. */
 EVP_PKEY * generate_key()
 {

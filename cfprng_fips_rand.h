@@ -30,6 +30,7 @@ extern "C" {
 #include <openssl/crypto.h>
 #include <openssl/err.h>
 #include <openssl/rand.h>
+#include <openssl/bio.h>
 
 #undef CFPRNG_MAX_RAND_BYTES
 #define CFPRNG_MAX_RAND_BYTES 1024
