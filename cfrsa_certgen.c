@@ -1,5 +1,5 @@
 /*******************************************************
-*   R Khera 5/3/17 
+*   R Khera 10/31/2017 
 *   ANSI C wrapper code for 
 *   rsa self signed certs in OpenSSL
 * 
@@ -12,7 +12,7 @@
 #include "cfrsa_core.h"
 
 
-char *X509_to_PEM(X509 *cert) {
+char* X509_to_PEM(X509 *cert) {
 
     BIO *bio = NULL;
     char *pem = NULL;

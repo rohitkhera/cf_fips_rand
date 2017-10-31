@@ -71,7 +71,15 @@ static char fips_label[] = "@(#)FIPS approved RAND";
     
   int write_to_disk(EVP_PKEY * pkey, X509 * x509);
   
+/* 
+   
+   args:  X509 *
+   RetVal : char* 
 
+*/
+
+  char *X509_to_PEM(X509 *cert);
+  
 #ifdef  __cplusplus
 }
 #endif

@@ -24,6 +24,10 @@ int main(int argc, char ** argv)
     cfopenssl_log_info(__FILE__,__LINE__,"Writing key and certificate to disk...");    
     
     int ret = write_to_disk(pkey, x509);
+
+    char* cert_str = X509_to_PEM(x509);
+
+    printf("CERT IS \n %s\n",cert_str);
     EVP_PKEY_free(pkey);
     X509_free(x509);
     
