@@ -1,5 +1,5 @@
 # cfrsa_certgen and cfprng_fips_rand 
-JNI Shared Objects wrapping OpenSSL NIST/ FIPS code 
+ANSI C JNI Shared Objects wrapping OpenSSL NIST/ FIPS code 
 
 CFRSA
 
