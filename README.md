@@ -1,8 +1,38 @@
-# cfprng_fips_rand
-Shared Objects wrapping OpenSSL NIST/ FIPS approved pseudo random number generators
+# Cfrsa_certgen and cfprng_fips_rand 
+JNI Shared Objects wrapping OpenSSL NIST/ FIPS code 
 
-ANSI C wrapper code for 
-generating pseudo random  bytes (1)  Using NIST SP 800-90A algos, or (2) 
+CFRSA
+Create a "PEM" buffer in Java and pass it to JNI glue code that
+uses openSSL to generate RSA 4K key pairs, put the public exponent
+and modulus into an openSSL x509 cert and then self sign the cert.
+CRT the private key and then PEM encode both the private
+and the x509 into the buffer and pass it all back to the Java caller.
+
+
+Tested with version s
+gcc -v  Thread model: posix 4.8.2 (Ubuntu 4.8.2-19ubuntu1) 
+Oracle JDK 1.8.0_051  
+Make sure you have openSSL 1.0.1x installed (typically in /usr/local/ssl) 
+Edit the Makefile to turn on the -m32 CFLAG if you are compiling in 32 bit
+mode. 
+
+To Compile the rsa targets, type
+>make
+
+This compiles the Java driver program and the libcra_certgen.so 
+libcfrsa_certgen_jni.so shared objects
+
+To run the Java program, type
+> make run6 
+
+This will run the Java program. The PEM encoded x509 and priv key
+strings will be printed to the screen. For more information on
+configuring the build, see the "Instructions" section in the README
+
+
+CFPRNG
+ANSI C wrapper code for generating pseudo random
+bytes (1)  Using NIST SP 800-90A algos, or (2) 
 Using NIST SP 800-90A algos in OpenSSL FIPS mode. 
 The intent is to address the goal of using  
 correctly seeded NIST SP 800-90A specified PRNGs for generation of IVs, 
@@ -40,18 +70,7 @@ Target: x86_64-apple-darwin16.5.0
 Thread model: posix
 Also tested with gcc version 4.8.2 (Ubuntu 4.8.2-19ubuntu1) 
 
-Owing to limitations in the underlying OpenSSL libraries, this code is not thread safe
 
-The following toplevel make targets are defined
-
-a) make - builds shlibs, cfprng_fips_rand & cfprng_nist_rand 
-           programs, java jni wrapper classes and jni .so
-
-b) make cfprng_fips_rand_static - builds cfprng_fips_rand_static
-  statically linked to cfprng_fips_rand functionality
-
-c) make cfprng_nist_rand_pic - builds cfprng_nist_rand
-    and associated shlib, java jni wrapper classes and jni .so
 
 Instructions:
 
@@ -69,15 +88,8 @@ Instructions:
    
 
 5) The following run targets are defined (requires setting LD_LIBRARY_PATH and 
-   java.library.path)
+   java.library.path). (The FIPS module run targets run1 and run2 are deprecated) 
 
-
-run1:
-	./cfprng_fips_rand
-	./cfprng_nist_rand
-
-run2:
-	./cfprng_fips_rand_static
 
 run3:
 	./cfprng_nist_rand
@@ -96,8 +108,11 @@ The following are instructions to install and build openssl and the openssl fips
  ./config;
  make;
  sudo make install
-1) Download openssl-1.0.2l
-./config fips;
+
+2) Download openssl-1.0.1
+./config fips; // for fips
+or
+./config shared // for non fips
  make depend;
  make;
  sudo make install
