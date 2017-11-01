@@ -16,10 +16,10 @@ extern "C" {
 /*
  * Class:     CfRsaCertGen
  * Method:    cfrsa_certgen
- * Signature: ([C)I
+ * Signature: ([B)I
  */
 JNIEXPORT jint JNICALL Java_CfRsaCertGen_cfrsa_1certgen
-  (JNIEnv *, jobject, jcharArray);
+  (JNIEnv *, jobject, jbyteArray);
 
 #ifdef __cplusplus
 }

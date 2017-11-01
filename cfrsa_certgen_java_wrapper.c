@@ -37,6 +37,7 @@
  * Signature: ()[C
  */
 
+/*
 JNIEXPORT jint JNICALL Java_CfRsaCertGen_cfrsa_1certgen
 (JNIEnv * env, jobject obj, jcharArray buf) {
 
@@ -56,6 +57,36 @@ JNIEXPORT jint JNICALL Java_CfRsaCertGen_cfrsa_1certgen
 
   else {
     (*env)->ReleaseCharArrayElements(env, buf, bufferPtr, 0);
+    return (jint) numbytes;
+  }
+  
+  return -1;
+
+
+}
+*/
+
+
+
+JNIEXPORT jint JNICALL Java_CfRsaCertGen_cfrsa_1certgen
+(JNIEnv * env, jobject obj, jbyteArray buf) {
+
+
+  jbyte* bufferPtr = NULL;
+  bufferPtr = (*env)->GetByteArrayElements(env, buf, NULL);
+  if(bufferPtr == NULL) return (jint) -1;
+
+  jsize lengthOfArray = -1;
+  lengthOfArray = (*env)->GetArrayLength(env, buf);
+  int numbytes = cfrsa_certgen((char*) bufferPtr);
+  if(numbytes == -1) {
+    cfopenssl_log_err(__FILE__,__LINE__,"Error caling cfrsa_certgen()");
+    (*env)->ReleaseByteArrayElements(env, buf, bufferPtr, 0);
+    return (jint) -1;
+  }
+
+  else {
+    (*env)->ReleaseByteArrayElements(env, buf, bufferPtr, 0);
     return (jint) numbytes;
   }
   
