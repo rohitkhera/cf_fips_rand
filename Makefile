@@ -183,7 +183,9 @@ CFRSA_OBJS=$(CFRSA_CERTGEN_PREFIX).o
 
 COMMON_OBJS=$(UTILS_PREFIX).o $(FIPS_TESTS_PREFIX).o
 
-JAVA_CLASSES=CfprngRand.class
+JAVA_CLASSES1=CfprngRand.class
+
+JAVA_CLASSES2=CfRsaCertGen.class
 
 HEADERS=cfprng_fips_rand.h
 
@@ -235,7 +237,9 @@ FIPS_LD=$(OPENSSLDIR)/fips-2.0/bin/fipsld $(LD_FLAGS)
 
 
 
-all: $(TARGETS2)
+all:
+	make clean;\
+	make $(TARGETS2)
 
 $(FIPS_SO_PREFIX).o: 
 	$(CC) -c $(CFLAGS) $(RELOC_FLAGS)  $(FIPS_SO_PREFIX).c
@@ -267,7 +271,7 @@ $(CFRSA_CERTGEN_SO): $(COMMON_SO) $(CFRSA_OBJS)
 	$(CC) $(SO_FLAGS) $(ARCH_FLAGS) -o $(CFRSA_CERTGEN_SO)  $(CFRSA_OBJS)  -l$(COMMON_SO_PREFIX) $(LIBS)
 
 
-$(CFRSA_CERTGEN_PROG)_pic: $(CFRSA_CERTGEN_SO) $(CFRSA_CERTGEN_MAIN_PREFIX).o
+$(CFRSA_CERTGEN_PROG)_pic: $(CFRSA_CERTGEN_SO) $(CFRSA_CERTGEN_MAIN_PREFIX).o $(CFRSA_CERTGEN_JNI_SO)
 	$(CC) $(LD_FLAGS) $(CFRSA_CERTGEN_MAIN_PREFIX).o -o $(CFRSA_CERTGEN_PROG) -l$(CFRSA_CERTGEN_PREFIX) -l$(COMMON_SO_PREFIX) $(LIBS)
 
 
@@ -303,17 +307,17 @@ $(CFPRNG_JNI_SO): javah_cfprng  cfprng_rand_java_wrapper.o
 	$(LIBS) -l$(COMMON_SO_PREFIX) -l$(NIST_SO_PREFIX)
 
 
-javah_cfprng: $(JAVA_CLASSES)
+javah_cfprng: $(JAVA_CLASSES1)
 	$(JAVAH) -jni CfprngRand
 
 
-$(CFRSA_CERTGEN_JNI_SO): javah_cfrsa  cfrsa_certgen_java_wrapper.o
+$(CFRSA_CERTGEN_JNI_SO): cfrsa_certgen_java_wrapper.o
 	$(CC) $(SO_FLAGS) $(ARCH_FLAGS) -o $(CFRSA_CERTGEN_JNI_SO)  cfrsa_certgen_java_wrapper.o \
 	$(LIBS) 
 
 
-javah_cfrsa: $(JAVA_CLASSES)
-	$(JAVAH) -jni CfprngRand
+javah_cfrsa: $(JAVA_CLASSES2)
+	$(JAVAH) -jni CfRsaCertGen
 
 
 

@@ -1,7 +1,7 @@
 /******************************************************************
  * Java class for accessing functions cfrsa_core.h
  * This class loads the following libraries in the static block 
- * (1) libcfrsa_certgen_jni.so  (calls to 
+ * (1) libcfrsa_certgen_jni.so  
  ******************************************************************/
  
 public class CfRsaCertGen { 
@@ -13,10 +13,10 @@ public class CfRsaCertGen {
 
 
     public static final int CFRSA_SUCCESS = 0x01;
-    public static final int CFRSA_ERR = 0x01;
-    //public native int cfprng_fips_rand(byte[] buf, int len);
-    // public native int cfprng_nist_rand(byte[] buf, int len);
-    //public native int cfprng_fips_tests();
+    public static final int CFRSA_ERR = 0x0;
+    public static final int CFRSA_PEMBUF_SZ = 10000;
+    public native int cfrsa_certgen(char[] pembuf);
+
     private final static char[] hexArray = "0123456789ABCDEF".toCharArray();
     
     static {
@@ -44,7 +44,9 @@ public class CfRsaCertGen {
 
     public static void main(String[] args) {
 
-
+	CfRsaCertGen certgen = new CfRsaCertGen();
+	char[] pem = new char[CFRSA_PEMBUF_SZ];
+	int bytes = certgen.cfrsa_certgen(pem);
 
     }
 

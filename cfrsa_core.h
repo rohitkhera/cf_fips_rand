@@ -1,18 +1,32 @@
-/************************************************************************* 
-*   R Khera 5/3/17 
-*  ANSI C wrapper code for 
-*  for openSSL RSA functions 
-*  including key gen, current supported 
-*  FIPS methods are 
-*  GenKey9.31, SigGen9.31, SigGenPKCS1.5,
-*  SigGenPSS, SigVer9.31, SigVerPKCS1.5,
-*  SigVerPSS (1024/1536/2048/3072/4096 with all
-*  SHA sizes)
-*  Tested wth openssl-1.0.1
-*  This file is compiled into a shared object that should 
-*  be placed in the caller's LD_LIBRARY_PATH (see 
-*  Makefile for compiler versions, fipsld, ld.so / c flags etc.)
-*************************************************************************/ 
+/************************************************************************
+*    R Khera 10/31/2017
+*   ANSI C wrapper code for 
+*   (1)  
+*   generating pseudo random  bytes 
+*   Using NIST SP 800-90A algos with the OpenSSL FIPS module 
+*   The goal in CF is to only use 
+*   a PRNG specified in NIST SP 800-90A 
+*   Enabling OpenSSL FIPS mode only allows algorithms 
+*   specified in SP 800-90A and ANS X9.31
+*   However, we would prefer to just use algorithms 
+*   from SP800-90A over ANS X9.31
+*   Among the SP800-90A specified algorithms, we 
+*   must avoid "Dual_EC_DRBG". 
+*   (2)
+*   RSA 4K key gen and cert gen 
+*   (3) 
+*   AES GCM 128
+*   Tested wth openssl-fips-2.0.11 and openssl-1.0.1r
+*   This file is compiled into a shared object that should 
+*   be placed in the caller's LD_LIBRARY_PATH 
+*  Apple LLVM version 8.1.0 (clang-802.0.42)
+*  Target: x86_64-apple-darwin16.5.0
+* Thread model: posix
+* Also tested with gcc version 4.8.2 (Ubuntu 4.8.2-19ubuntu1) 
+*  Also see Makefile for more on compiler versions, 
+*  fipsld, ld.so / c flags etc.
+*
+*************************************************************************/    
 
 #ifndef HEADER_CF_RSA_CORE_H
 # define HEADER_CF_RSA_CORE_H  
@@ -38,6 +52,10 @@ extern "C" {
 #undef  CFRSA_ERR
 #define CFRSA_ERR 0x00U
 
+#undef  CFRSA_PEMBUF_SZ 
+#define CFRSA_PEMBUF_SZ 10000
+
+  
   /*
 static char fips_label[] = "@(#)FIPS approved RAND"; 
   */
@@ -50,7 +68,7 @@ static char fips_label[] = "@(#)FIPS approved RAND";
    
 */
 
-  EVP_PKEY * generate_key();
+  EVP_PKEY * cfrsa_generate_key();
 
 /* 
    Generates a self-signed x509 certificate. 
@@ -59,7 +77,7 @@ static char fips_label[] = "@(#)FIPS approved RAND";
 
 */
 
-  X509 * generate_x509(EVP_PKEY * pkey);
+  X509 * cfrsa_generate_x509(EVP_PKEY * pkey);
 
 
 /* 
@@ -69,17 +87,49 @@ static char fips_label[] = "@(#)FIPS approved RAND";
 
 */
     
-  int write_to_disk(EVP_PKEY * pkey, X509 * x509);
+  int cfrsa_write_to_disk(EVP_PKEY * pkey, X509 * x509);
   
 /* 
-   
+   deprecated: for testing only 
    args:  X509 *
-   RetVal : char* 
+   RetVal : char* (x509 PEM string )
 
 */
 
-  char *X509_to_PEM(X509 *cert);
   
+  char *cfrsa_X509_to_PEM2(X509 *cert);
+
+/* 
+   args:  X509 *, char* pembuffer
+   RetVal : numbytes written to pembuffer
+
+*/
+
+
+  int cfrsa_X509_to_PEM(X509 *cert, char* pembuf);
+
+  
+/* 
+   Deprecated, for testing only
+   args:  none
+   RetVal : 
+
+*/
+
+  char* cfrsa_certgen2();
+
+  
+/* 
+
+   args:  char buffer of size CFRSA_PEMBUF_SZ
+   RetVal : number of characters written
+
+*/
+
+  int cfrsa_certgen(char *pembuf);
+
+
+
 #ifdef  __cplusplus
 }
 #endif
