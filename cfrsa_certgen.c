@@ -232,13 +232,7 @@ char* cfrsa_certgen2()
     EVP_PKEY_free(pkey);
     X509_free(x509);
     
-    if(ret)
-    {
-          cfopenssl_log_info(__FILE__,__LINE__,"Success");    
-	  return NULL;
-    }
-    else
-      return cert_str;
+    return cert_str;
 }
 
 
@@ -250,7 +244,7 @@ int cfrsa_certgen(char* pembuf)
     
     EVP_PKEY * pkey = cfrsa_generate_key();
     if(!pkey)
-      return CFRSA_ERR;
+      return -1;
     
     /* Generate the certificate. */
     cfopenssl_log_info(__FILE__,__LINE__,"Generating x509 certificate...");
@@ -258,7 +252,7 @@ int cfrsa_certgen(char* pembuf)
     if(!x509)
     {
         EVP_PKEY_free(pkey);
-        return CFRSA_ERR;
+        return -1;
     }
     
     /* Write the private key and certificate out to disk. */
@@ -273,11 +267,5 @@ int cfrsa_certgen(char* pembuf)
     EVP_PKEY_free(pkey);
     X509_free(x509);
     
-    if(ret)
-    {
-          cfopenssl_log_info(__FILE__,__LINE__,"Success");    
-	  return -1;
-    }
-    else
-      return numbytes;
+    return numbytes;
 }
