@@ -346,7 +346,8 @@ run5:
 
 run6:
 	export LD_LIBRARY_PATH=$(LD_LIBRARY_PATH);\
-	 $(JAVA_PATH)/java -Djava.library.path=$(JAVA_LIB_PATH) CfRsaCertGen
+	 $(JAVA_PATH)/java -Djava.library.path=$(JAVA_LIB_PATH) CfRsaCertGen; \
+	openssl verify -verbose -CAfile cert.pem  cert.pem
 
 clean:
 	@rm -rf *.o $(TARGETS) $(FIPS_PROG_NO_PIC) $(NIST_PROG) $(NIST_PROG)_pic $(CFRSA_CERTGEN_PROG) *.class *.$(SO_EXT) *.pem
