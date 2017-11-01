@@ -6,10 +6,12 @@
  * result in a FIPS_check_incore_fingerprint error, likely need 
  * special king fu to compile OpenSSL FIPS module with PIC 
  * (2) libcfprng_nist_rand.so 
+ *
  ******************************************************************/
  
 public class CfprngRand { 
 
+    
 
     /* Refer to function prototypes in cfprng_fips_rand.h for args and 
        return values
