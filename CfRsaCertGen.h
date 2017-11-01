@@ -15,11 +15,11 @@ extern "C" {
 #define CfRsaCertGen_CFRSA_PEMBUF_SZ 10000L
 /*
  * Class:     CfRsaCertGen
- * Method:    cfrsa_certgen
- * Signature: ([B)I
+ * Method:    cfrsa_cert_key_gen
+ * Signature: ([B[B)I
  */
-JNIEXPORT jint JNICALL Java_CfRsaCertGen_cfrsa_1certgen
-  (JNIEnv *, jobject, jbyteArray);
+JNIEXPORT jint JNICALL Java_CfRsaCertGen_cfrsa_1cert_1key_1gen
+  (JNIEnv *, jobject, jbyteArray, jbyteArray);
 
 #ifdef __cplusplus
 }

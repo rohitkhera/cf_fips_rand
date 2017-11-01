@@ -68,25 +68,37 @@ JNIEXPORT jint JNICALL Java_CfRsaCertGen_cfrsa_1certgen
 
 
 
-JNIEXPORT jint JNICALL Java_CfRsaCertGen_cfrsa_1certgen
-(JNIEnv * env, jobject obj, jbyteArray buf) {
+JNIEXPORT jint JNICALL Java_CfRsaCertGen_cfrsa_1cert_1key_1gen
+(JNIEnv * env, jobject obj, jbyteArray x509buf, jbyteArray keybuf) {
 
 
-  jbyte* bufferPtr = NULL;
-  bufferPtr = (*env)->GetByteArrayElements(env, buf, NULL);
-  if(bufferPtr == NULL) return (jint) -1;
+  jbyte* x509bufferPtr = NULL;
+  x509bufferPtr = (*env)->GetByteArrayElements(env, x509buf, NULL);
+  if(x509bufferPtr == NULL) return (jint) -1;
 
-  jsize lengthOfArray = -1;
-  lengthOfArray = (*env)->GetArrayLength(env, buf);
-  int numbytes = cfrsa_certgen((char*) bufferPtr);
+  jbyte* keybufferPtr = NULL;
+  keybufferPtr = (*env)->GetByteArrayElements(env, keybuf, NULL);
+  if(keybufferPtr == NULL) return (jint) -1;
+
+
+  /* Todo: conduct some sanity checks with the following sizes */
+
+  jsize lengthOfArray1 = -1;
+  lengthOfArray1 = (*env)->GetArrayLength(env, x509buf);
+  jsize lengthOfArray2 = -1;
+  lengthOfArray2 = (*env)->GetArrayLength(env, keybuf);
+  
+  int numbytes = cfrsa_cert_key_gen((char*) x509bufferPtr,(char*) keybufferPtr);
   if(numbytes == -1) {
     cfopenssl_log_err(__FILE__,__LINE__,"Error caling cfrsa_certgen()");
-    (*env)->ReleaseByteArrayElements(env, buf, bufferPtr, 0);
+    (*env)->ReleaseByteArrayElements(env, x509buf, x509bufferPtr, 0);
+    (*env)->ReleaseByteArrayElements(env, keybuf, keybufferPtr, 0);    
     return (jint) -1;
   }
 
   else {
-    (*env)->ReleaseByteArrayElements(env, buf, bufferPtr, 0);
+    (*env)->ReleaseByteArrayElements(env, x509buf, x509bufferPtr, 0);
+    (*env)->ReleaseByteArrayElements(env, keybuf, keybufferPtr, 0);    
     return (jint) numbytes;
   }
   

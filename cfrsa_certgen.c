@@ -90,6 +90,35 @@ int cfrsa_X509_to_PEM(X509 *cert, char* pembuf) {
 }
 
 
+int cfrsa_privkey_to_PEM(EVP_PKEY* key, char* keybuf) {
+
+    BIO *bio = NULL;
+
+
+    if (NULL == key) {
+      return -1;
+    }
+
+    bio = BIO_new(BIO_s_mem());
+    if (NULL == bio) {
+      return -1;
+    }
+
+    if (0 == PEM_write_bio_PrivateKey(bio, key,NULL,NULL,0,0,NULL)) {
+        BIO_free(bio);
+	return -1;
+    }
+
+
+    memset(keybuf, 0, bio->num_write + 1);
+    BIO_read(bio, keybuf, bio->num_write);
+    BIO_free(bio);
+    return bio->num_write;
+}
+
+
+
+
 /* Gen 4k-bit RSA key. */
 EVP_PKEY * cfrsa_generate_key()
 {
@@ -105,7 +134,7 @@ EVP_PKEY * cfrsa_generate_key()
   RSA * rsa = RSA_generate_key(4096, RSA_F4, NULL, NULL);
   if(!EVP_PKEY_assign_RSA(pkey, rsa))
     {
-      cfopenssl_log_err(__FILE__,__LINE__,"Unable to 4096 bit RSA key");      
+      cfopenssl_log_err(__FILE__,__LINE__,"Unable to gen 4096 bit RSA key");      
       EVP_PKEY_free(pkey);
       return NULL;
     }
@@ -124,7 +153,7 @@ X509 * cfrsa_generate_x509(EVP_PKEY * pkey)
       return NULL;
     }
     
-  /* Set the serial number. */
+  /* Set the serial number. In prod make this a random number*/
   ASN1_INTEGER_set(X509_get_serialNumber(x509), 1);
     
   /* set validity to 1 year or whatever */
@@ -236,7 +265,18 @@ char* cfrsa_certgen2()
 }
 
 
-int cfrsa_certgen(char* pembuf)
+
+/* 
+
+   args:  char buffer for x509 PEM of size CFRSA_PEMBUF_SZ
+          char buffer for priv key PEM of size CFRSA_PEMBUF_SZ
+   RetVal : number of characters written to keybuf
+            pass in an int array that returns num bytes wrrite
+            to both keybuf and pembuf
+
+*/
+
+int cfrsa_cert_key_gen(char* pembuf, char* keybuf)
 {
     /* Generate the key. */
    cfopenssl_log_info(__FILE__,__LINE__,"Generating RSA 4K key...");
@@ -261,12 +301,19 @@ int cfrsa_certgen(char* pembuf)
     int ret = cfrsa_write_to_disk(pkey, x509);
 
     int numbytes = cfrsa_X509_to_PEM(x509, pembuf);
+
+    int numbytes2 = cfrsa_privkey_to_PEM(pkey,keybuf);
+
     cfopenssl_log_info(__FILE__,__LINE__, "From C Land");
     fprintf(stderr," Got %d bytes\n", numbytes);
     cfopenssl_log_info(__FILE__,__LINE__,pembuf);
 
+    fprintf(stderr," Got %d bytes\n", numbytes2);
+    cfopenssl_log_info(__FILE__,__LINE__,keybuf);
+
+    
     EVP_PKEY_free(pkey);
     X509_free(x509);
     
-    return numbytes;
+    return numbytes2;
 }

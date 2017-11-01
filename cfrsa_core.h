@@ -121,14 +121,27 @@ static char fips_label[] = "@(#)FIPS approved RAND";
   
 /* 
 
-   args:  char buffer of size CFRSA_PEMBUF_SZ
-   RetVal : number of characters written
+   args:  char buffer for x509 PEM of size CFRSA_PEMBUF_SZ
+          char buffer for priv key PEM of size CFRSA_PEMBUF_SZ
+   RetVal : number of characters written to keybuf
+            pass in an int array that returns num bytes wrrite
+            to both keybuf and pembuf
 
 */
 
-  int cfrsa_certgen(char *pembuf);
+  int cfrsa_cert_key_gen(char *pembuf, char* keybuf);
 
 
+/* 
+
+   args:  EVP_PKEY* private key pointer
+          char* - pem write buffer
+   RetVal : number of characters written
+
+*/
+  
+
+  int cfrsa_privkey_to_PEM(EVP_PKEY* key, char* keybuf);
 
 #ifdef  __cplusplus
 }
