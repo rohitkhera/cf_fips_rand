@@ -21,7 +21,7 @@ To Compile the rsa targets, type
 >make
 
 This compiles the Java driver program and the libcfrsa_certgen.so 
-libcfrsa_certgen_jni.so shared objects
+and libcfrsa_certgen_jni.so shared objects
 
 To run the Java program, type
 > make run6 
