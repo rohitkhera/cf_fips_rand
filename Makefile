@@ -311,9 +311,9 @@ javah_cfprng: $(JAVA_CLASSES1)
 	$(JAVAH) -jni CfprngRand
 
 
-$(CFRSA_CERTGEN_JNI_SO): cfrsa_certgen_java_wrapper.o
+$(CFRSA_CERTGEN_JNI_SO): javah_cfrsa cfrsa_certgen_java_wrapper.o
 	$(CC) $(SO_FLAGS) $(ARCH_FLAGS) -o $(CFRSA_CERTGEN_JNI_SO)  cfrsa_certgen_java_wrapper.o \
-	$(LIBS) 
+	$(LIBS) -l$(COMMON_SO_PREFIX) -l$(CFRSA_CERTGEN_PREFIX)
 
 
 javah_cfrsa: $(JAVA_CLASSES2)
@@ -343,6 +343,9 @@ run5:
 	export LD_LIBRARY_PATH=$(LD_LIBRARY_PATH);\
 	./cfrsa_certgen
 
+run6:
+	export LD_LIBRARY_PATH=$(LD_LIBRARY_PATH);\
+	 $(JAVA_PATH)/java -Djava.library.path=$(JAVA_LIB_PATH) CfRsaCertGen
 
 clean:
 	@rm -rf *.o $(TARGETS) $(FIPS_PROG_NO_PIC) $(NIST_PROG) $(NIST_PROG)_pic $(CFRSA_CERTGEN_PROG) *.class *.$(SO_EXT) *.pem

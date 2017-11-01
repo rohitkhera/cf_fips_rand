@@ -46,7 +46,10 @@ public class CfRsaCertGen {
 
 	CfRsaCertGen certgen = new CfRsaCertGen();
 	char[] pem = new char[CFRSA_PEMBUF_SZ];
-	int bytes = certgen.cfrsa_certgen(pem);
+	int numbytes = certgen.cfrsa_certgen(pem);
+	System.out.println("From Java Land");
+	System.out.println("Got " + numbytes);
+	//System.out.println(new String(pem));	
 
     }
 

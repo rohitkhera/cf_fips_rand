@@ -38,8 +38,27 @@
  */
 
 JNIEXPORT jint JNICALL Java_CfRsaCertGen_cfrsa_1certgen
-(JNIEnv * env, jobject obj, jcharArray array) {
+(JNIEnv * env, jobject obj, jcharArray buf) {
 
+
+  jchar* bufferPtr = NULL;
+  bufferPtr = (*env)->GetCharArrayElements(env, buf, NULL);
+  if(bufferPtr == NULL) return (jint) -1;
+
+  jsize lengthOfArray = -1;
+  lengthOfArray = (*env)->GetArrayLength(env, buf);
+  int numbytes = cfrsa_certgen((char*) bufferPtr);
+  if(numbytes == -1) {
+    cfopenssl_log_err(__FILE__,__LINE__,"Error caling cfrsa_certgen()");
+    (*env)->ReleaseCharArrayElements(env, buf, bufferPtr, 0);
+    return (jint) -1;
+  }
+
+  else {
+    (*env)->ReleaseCharArrayElements(env, buf, bufferPtr, 0);
+    return (jint) numbytes;
+  }
+  
   return -1;
 
 

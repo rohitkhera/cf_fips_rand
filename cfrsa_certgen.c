@@ -183,7 +183,7 @@ int cfrsa_write_to_disk(EVP_PKEY * privkey, X509 * x509)
     FILE * x509_file = fopen("cert.pem", "wb");
     if(!x509_file)
       {
-	cfopenssl_log_err(__FILE__,__LINE__,"Can't open cery key file for write");			
+	cfopenssl_log_err(__FILE__,__LINE__,"Can't open cert key file for write");			
         return CFRSA_ERR;
       }
     
@@ -260,8 +260,9 @@ int cfrsa_certgen(char* pembuf)
     
     int ret = cfrsa_write_to_disk(pkey, x509);
 
-    int numbytes = cfrsa_X509_to_PEM(x509,pembuf);
-
+    int numbytes = cfrsa_X509_to_PEM(x509, pembuf);
+    cfopenssl_log_info(__FILE__,__LINE__, "From C Land");
+    fprintf(stderr," Got %d bytes\n", numbytes);
     cfopenssl_log_info(__FILE__,__LINE__,pembuf);
 
     EVP_PKEY_free(pkey);
