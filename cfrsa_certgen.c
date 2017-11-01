@@ -66,7 +66,7 @@ char* cfrsa_X509_to_PEM2(X509 *cert) {
 int cfrsa_X509_to_PEM(X509 *cert, char* pembuf) {
 
     BIO *bio = NULL;
-    char *pem = NULL;
+
 
     if (NULL == cert) {
       return -1;
@@ -83,8 +83,8 @@ int cfrsa_X509_to_PEM(X509 *cert, char* pembuf) {
     }
 
 
-    memset(pem, 0, bio->num_write + 1);
-    BIO_read(bio, pem, bio->num_write);
+    memset(pembuf, 0, bio->num_write + 1);
+    BIO_read(bio, pembuf, bio->num_write);
     BIO_free(bio);
     return bio->num_write;
 }
