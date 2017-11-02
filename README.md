@@ -1,7 +1,8 @@
-# Cfrsa_certgen and cfprng_fips_rand 
-JNI Shared Objects wrapping OpenSSL NIST/ FIPS code 
+# cfrsa_certgen and cfprng_fips_rand 
+ANSI C JNI Shared Objects wrapping OpenSSL NIST/ FIPS code 
 
 CFRSA
+
 Create a "PEM" buffer in Java and pass it to JNI glue code that
 uses openSSL to generate RSA 4K key pairs, put the public exponent
 and modulus into an openSSL x509 cert and then self sign the cert.
@@ -19,8 +20,8 @@ mode.
 To Compile the rsa targets, type
 >make
 
-This compiles the Java driver program and the libcra_certgen.so 
-libcfrsa_certgen_jni.so shared objects
+This compiles the Java driver program and the libcfrsa_certgen.so 
+and libcfrsa_certgen_jni.so shared objects
 
 To run the Java program, type
 > make run6 
@@ -31,6 +32,7 @@ configuring the build, see the "Instructions" section in the README
 
 
 CFPRNG
+
 ANSI C wrapper code for generating pseudo random
 bytes (1)  Using NIST SP 800-90A algos, or (2) 
 Using NIST SP 800-90A algos in OpenSSL FIPS mode. 
