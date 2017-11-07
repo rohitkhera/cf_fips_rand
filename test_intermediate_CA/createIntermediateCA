@@ -1,5 +1,5 @@
 #!/bin/bash
-# Use the JNI / OpenSSL generated PSA private key and self signed cert as a root CA that issues an intermediate CA. 
+# Use the JNI / OpenSSL generated RSA private key and self signed cert as a root CA that issues an intermediate CA. 
 
 # generate a RSA 3K key pair for the intermediate CA
 #openssl genrsa -out intermediate.key.pem 3072
@@ -9,9 +9,9 @@ openssl genrsa -out intermediate.key.pem 4096
 
 
 # create a CSR for the intermediate CA
-# WARNING - if the CN was already issued and is in the CA DB, the root CA wil fail to update the D and the
-# intermediate cert issuance wil fail. In this case either purge the DB or change the CN strting in the
-# csr 
+# WARNING - if the CN was already issued and is in the CA DB, the root CA wil fail to update the DB and the
+# intermediate cert issuance will fail. In this case, either purge the DB or change the CN string in the
+# command below that generates the csr 
 
 openssl req  -new -sha256 -key intermediate.key.pem -config ./openssl.cnf -out intermediate.csr.pem -subj "/C=CA/ST=California/O=Pivotal Software Inc./CN=Pivotal Class 6 Intermediate CA"
 
