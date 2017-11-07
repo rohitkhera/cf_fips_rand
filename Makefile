@@ -350,7 +350,8 @@ run6:
 	openssl verify -verbose -CAfile cert.pem  cert.pem
 
 clean:
-	@rm -rf *.o $(TARGETS) $(FIPS_PROG_NO_PIC) $(NIST_PROG) $(NIST_PROG)_pic $(CFRSA_CERTGEN_PROG) *.class *.$(SO_EXT) *.pem
+	@rm -rf *.o $(TARGETS) $(FIPS_PROG_NO_PIC) $(NIST_PROG) $(NIST_PROG)_pic $(CFRSA_CERTGEN_PROG) *.class *.$(SO_EXT) *.pem test_intermediate_CA/intermediate.*
+
 
 
 ##############################################
