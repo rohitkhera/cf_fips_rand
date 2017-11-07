@@ -30,6 +30,14 @@ This will run the Java program. The PEM encoded x509 and priv key
 strings will be printed to the screen. For more information on
 configuring the build, see the "Instructions" section in the README
 
+Create a Test Intermediate CA:
+
+This JNI demo creates a self signed root CA cert (and private key).
+In order to use this to issue an intemediate CA with the OpenSSL command
+line utility, cd to the directory test_intermediate_CA  and run the
+script createIntermediateCA (read the directions in this script prior
+to running it) 
+
 
 CFPRNG
 
