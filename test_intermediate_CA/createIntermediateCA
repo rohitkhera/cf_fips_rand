@@ -16,4 +16,7 @@ openssl genrsa -out intermediate.key.pem 4096
 openssl req  -new -sha256 -key intermediate.key.pem -config ./openssl.cnf -out intermediate.csr.pem -subj "/C=CA/ST=California/O=Pivotal Software Inc./CN=Pivotal Class 6 Intermediate CA"
 
 # create the intermediate CA cert 
-openssl ca -in intermediate.csr.pem -cert ../cert.pem -config ./openssl.cnf -keyfile ../key.pem -days 4384 -out intermediate.cert.pem
+openssl ca -in intermediate.csr.pem -cert ../cert.pem -config ./openssl.cnf -keyfile ../key.pem -days 60 -out intermediate.cert.pem
+
+# print the intermediate cert
+openssl x509 -in intermediate.cert.pem -text
