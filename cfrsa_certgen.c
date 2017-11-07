@@ -168,8 +168,9 @@ X509 * cfrsa_generate_x509(EVP_PKEY * pkey)
   
   /* Set the country code and common name. */
   X509_NAME_add_entry_by_txt(name, "C",  MBSTRING_ASC, (unsigned char *)"CA",        -1, -1, 0);
-  X509_NAME_add_entry_by_txt(name, "O",  MBSTRING_ASC, (unsigned char *)"PCF", -1, -1, 0);
-  X509_NAME_add_entry_by_txt(name, "CN", MBSTRING_ASC, (unsigned char *) "hostname.pivotal.io", -1, -1, 0);
+  X509_NAME_add_entry_by_txt(name, "ST",  MBSTRING_ASC, (unsigned char *)"California",        -1, -1, 0);  
+  X509_NAME_add_entry_by_txt(name, "O",  MBSTRING_ASC, (unsigned char *)"Pivotal Software Inc.", -1, -1, 0);
+  X509_NAME_add_entry_by_txt(name, "CN", MBSTRING_ASC, (unsigned char *) "Pivotal Class 1 Root CA", -1, -1, 0);
   
   /* Now set the issuer name. */
   X509_set_issuer_name(x509, name);
