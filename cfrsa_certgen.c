@@ -306,10 +306,13 @@ int cfrsa_cert_key_gen(char* pembuf, char* keybuf)
     int numbytes2 = cfrsa_privkey_to_PEM(pkey,keybuf);
 
     cfopenssl_log_info(__FILE__,__LINE__, "From C Land");
+#ifdef CFOPENSSL_LOG_LEVEL_INFO
     fprintf(stderr," Got %d bytes\n", numbytes);
+#endif
     cfopenssl_log_info(__FILE__,__LINE__,pembuf);
-
+#ifdef CFOPENSSL_LOG_LEVEL_INFO
     fprintf(stderr," Got %d bytes\n", numbytes2);
+#endif
     cfopenssl_log_info(__FILE__,__LINE__,keybuf);
 
     
