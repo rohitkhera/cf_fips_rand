@@ -163,19 +163,19 @@ X509 * cfrsa_generate_x509(EVP_PKEY * pkey)
   /* Set the public key */
   X509_set_pubkey(x509, pkey);
   
-  /* here just copy the subject name to the issuer name. */
+  /* copy the subject name to the issuer name. */
   X509_NAME * name = X509_get_subject_name(x509);
   
-  /* Set the country code and common name. */
+  /* Add name entries */
   X509_NAME_add_entry_by_txt(name, "C",  MBSTRING_ASC, (unsigned char *)"CA",        -1, -1, 0);
   X509_NAME_add_entry_by_txt(name, "ST",  MBSTRING_ASC, (unsigned char *)"California",        -1, -1, 0);  
   X509_NAME_add_entry_by_txt(name, "O",  MBSTRING_ASC, (unsigned char *)"Pivotal Software Inc.", -1, -1, 0);
   X509_NAME_add_entry_by_txt(name, "CN", MBSTRING_ASC, (unsigned char *) "Pivotal Class 1 Root CA", -1, -1, 0);
   
-  /* Now set the issuer name. */
+  /* Issuer name (self signed) */
   X509_set_issuer_name(x509, name);
   
-  /* Actually sign the certificate with our key. */
+  /* sign the certificate with the private key. */
   if(!X509_sign(x509, pkey, EVP_sha256()))
     {
 #ifdef CFOPENSSL_LOG_LEVEL_ERR
